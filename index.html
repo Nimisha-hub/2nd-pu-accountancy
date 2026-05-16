@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>2nd PU Accountancy</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -18,7 +19,6 @@
 body{
   font-family:'Poppins',sans-serif;
   background:#fafafa;
-  color:#222;
   overflow:hidden;
 }
 
@@ -26,14 +26,14 @@ body{
 
 .nav{
   height:72px;
-  background:#ffffff;
+  background:#fff;
   border-bottom:1px solid #ececec;
 
   display:flex;
   align-items:center;
   justify-content:space-between;
 
-  padding:0 26px;
+  padding:0 24px;
 }
 
 .brand{
@@ -47,17 +47,15 @@ body{
   height:46px;
   border-radius:50%;
   object-fit:cover;
-  border:2px solid #d8d8d8;
 }
 
 .brand-text h1{
   font-size:22px;
-  font-weight:700;
 }
 
 .brand-text span{
   font-size:12px;
-  color:#888;
+  color:#777;
 }
 
 .nav-right{
@@ -68,17 +66,9 @@ body{
 .nav-btn{
   border:none;
   padding:10px 18px;
-  border-radius:14px;
-  background:#f4f4f4;
-  color:#444;
-  font-size:13px;
-  font-weight:500;
+  border-radius:12px;
+  background:#f5f5f5;
   cursor:pointer;
-}
-
-.nav-btn.active{
-  background:#dceeff;
-  color:#1363c6;
 }
 
 /* MAIN */
@@ -99,18 +89,17 @@ body{
 
 .box{
   background:#fff;
-  border:1px solid #ededed;
   border-radius:22px;
-  overflow:hidden;
+  border:1px solid #ededed;
 
   display:flex;
   flex-direction:column;
 
-  box-shadow:0 4px 12px rgba(0,0,0,.03);
+  overflow:hidden;
 }
 
 .box-head{
-  padding:18px 20px;
+  padding:18px;
   border-bottom:1px solid #f1f1f1;
 
   display:flex;
@@ -125,46 +114,30 @@ body{
 
 .box-sub{
   font-size:12px;
-  color:#999;
+  color:#888;
 }
 
-/* LEFT */
-
-.question-box{
-  height:100%;
-}
+/* QUESTION */
 
 .upload-area{
   flex:1;
+
   margin:18px;
-  border:2px dashed #dddddd;
+
+  border:2px dashed #ddd;
   border-radius:18px;
 
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
 
   cursor:pointer;
 }
 
-.upload-area svg{
-  width:58px;
-  height:58px;
-  stroke:#b8b8b8;
-  fill:none;
-  stroke-width:1.5;
-}
-
 .upload-area p{
-  margin-top:16px;
   text-align:center;
-  line-height:1.8;
   color:#777;
-}
-
-.upload-area strong{
-  color:#333;
+  line-height:1.8;
 }
 
 #fileInp{
@@ -183,12 +156,6 @@ body{
   border-radius:16px;
 }
 
-/* RIGHT */
-
-.workspace{
-  height:100%;
-}
-
 /* TOOLBAR */
 
 .toolbar{
@@ -203,30 +170,29 @@ body{
 .tool{
   border:none;
   padding:10px 18px;
-  border-radius:14px;
+  border-radius:12px;
   cursor:pointer;
-  font-size:13px;
   font-weight:600;
 }
 
-.tool.pencil{
+.pencil{
   background:#ffe8d9;
-  color:#d56b00;
 }
 
-.tool.eraser{
-  background:#e8f1ff;
-  color:#3c6fd1;
+.eraser{
+  background:#e7f0ff;
 }
 
-.tool.note{
-  background:#fff4c7;
-  color:#9a7300;
+.note{
+  background:#fff2c7;
 }
 
-.tool.clear{
-  background:#ffe3e3;
-  color:#c73a3a;
+.clear{
+  background:#ffe5e5;
+}
+
+.add-card{
+  background:#dcffe5;
 }
 
 .size-wrap{
@@ -236,12 +202,7 @@ body{
   gap:10px;
 }
 
-.size-wrap span{
-  font-size:12px;
-  color:#777;
-}
-
-/* MAIN DRAW */
+/* MAIN CANVAS */
 
 .main-canvas-wrap{
   position:relative;
@@ -250,12 +211,10 @@ body{
   background:
   repeating-linear-gradient(
     to bottom,
-    #ffffff 0px,
-    #ffffff 31px,
-    #f2f2f2 32px
+    #fff 0px,
+    #fff 31px,
+    #f1f1f1 32px
   );
-
-  border-bottom:1px solid #f1f1f1;
 }
 
 #wsCanvas{
@@ -271,17 +230,7 @@ body{
 .notes-area{
   flex:1;
   overflow-y:auto;
-  padding:0 14px 14px;
-}
-
-.notes-title{
-  font-size:12px;
-  font-weight:600;
-  color:#888;
-
-  padding:14px 0 10px;
-  letter-spacing:1px;
-  text-transform:uppercase;
+  padding:14px;
 }
 
 .notes-grid{
@@ -290,24 +239,23 @@ body{
   gap:14px;
 }
 
-/* NOTE CARD */
+/* CARD */
 
 .note-card{
-  background:#fff;
-  border:1px solid #f0f0f0;
+  border:1px solid #eee;
   border-radius:18px;
   overflow:hidden;
+  background:#fff;
 }
 
 .note-head{
   padding:14px;
+  background:#f8fbff;
+  border-bottom:1px solid #eee;
 
   display:flex;
   align-items:center;
   gap:10px;
-
-  background:#f9fbff;
-  border-bottom:1px solid #f0f0f0;
 }
 
 .note-num{
@@ -319,19 +267,14 @@ body{
   align-items:center;
   justify-content:center;
 
-  font-size:12px;
-  font-weight:700;
-
   background:#dceeff;
   color:#1565c0;
-}
-
-.note-head h3{
-  font-size:15px;
+  font-size:12px;
+  font-weight:700;
 }
 
 .note-body{
-  height:155px;
+  height:180px;
   position:relative;
 
   background:
@@ -353,7 +296,7 @@ body{
 
 .note-footer{
   padding:10px;
-  border-top:1px solid #f0f0f0;
+  border-top:1px solid #eee;
 
   display:flex;
   gap:8px;
@@ -369,50 +312,72 @@ body{
   font-weight:600;
 }
 
-.small-btn.black{
-  background:#ececec;
+.black{
+  background:#eee;
 }
 
-.small-btn.gray{
+.gray{
   background:#f5f5f5;
 }
 
-.small-btn.red{
-  background:#ffe7e7;
-  color:#d33;
+.red{
+  background:#ffe5e5;
 }
 
-.small-btn.gold{
-  background:#fff2c9;
-  color:#9d7400;
+.gold{
+  background:#fff2c7;
 }
 
 /* STICKY */
 
 .sticky{
   position:absolute;
-  width:130px;
-  min-height:95px;
 
-  background:#fff6b7;
-  border-radius:14px;
+  width:150px;
+  min-height:130px;
+
+  background:#fff3a6;
+
+  border-radius:16px;
 
   padding:10px;
 
   box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+  z-index:100;
+}
+
+.sticky-top{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:5px;
+}
+
+.sticky-clear{
+  width:22px;
+  height:22px;
+
+  border:none;
+  border-radius:50%;
+
+  background:#ffdddd;
+  color:#d33;
+
+  cursor:pointer;
 }
 
 .sticky textarea{
   width:100%;
-  height:65px;
+  height:80px;
 
   border:none;
-  background:transparent;
-  resize:none;
   outline:none;
+  resize:none;
 
-  font-size:12px;
+  background:transparent;
+
   font-family:'Poppins',sans-serif;
+  font-size:13px;
 }
 
 /* MOBILE */
@@ -425,7 +390,6 @@ body{
 
   .grid{
     grid-template-columns:1fr;
-    height:auto;
   }
 
   .notes-grid{
@@ -438,8 +402,6 @@ body{
 </head>
 
 <body>
-
-<!-- NAVBAR -->
 
 <nav class="nav">
 
@@ -454,33 +416,26 @@ body{
 
   </div>
 
-<div class="nav-right">
+ <div class="nav-right">
 
- 
+  <button class="nav-btn"
+  onclick="window.location.href='revaluation.html'">
+    Revaluation
+  </button>
 
-  <a href="Revaluation.html">
-    <button class="nav-btn">
-      Revaluation A/c
-    </button>
-  </a>
+  <button class="nav-btn"
+  onclick="window.location.href='partners capital.html'">
+    Capital A/c
+  </button>
 
-  <a href="partners capital.html">
-    <button class="nav-btn">
-      Partners Capital
-    </button>
-  </a>
-
-  <a href="balance sheet.html">
-    <button class="nav-btn">
-      Balance Sheet
-    </button>
-  </a>
+  <button class="nav-btn"
+  onclick="window.location.href='balance sheet.html'">
+    Balance Sheet
+  </button>
 
 </div>
 
 </nav>
-
-<!-- MAIN -->
 
 <div class="main">
 
@@ -488,14 +443,14 @@ body{
 
     <!-- LEFT -->
 
-    <div class="box question-box">
+    <div class="box">
 
       <div class="box-head">
 
         <div class="box-title">Question Image</div>
 
         <div class="box-sub">
-          Upload image • stays visible while solving
+          Upload image
         </div>
 
       </div>
@@ -503,15 +458,9 @@ body{
       <div class="upload-area"
       onclick="document.getElementById('fileInp').click()">
 
-        <svg viewBox="0 0 24 24">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-
         <p>
-          <strong>Click to upload question</strong><br>
-          PNG • JPG • PDF
+          <strong>Click to Upload</strong><br>
+          PNG • JPG
         </p>
 
       </div>
@@ -526,19 +475,17 @@ body{
 
     <!-- RIGHT -->
 
-    <div class="box workspace">
+    <div class="box">
 
       <div class="box-head">
 
         <div class="box-title">Working Space</div>
 
         <div class="box-sub">
-          Draw • Erase • Notes
+          Draw • Notes
         </div>
 
       </div>
-
-      <!-- TOOLBAR -->
 
       <div class="toolbar">
 
@@ -552,7 +499,7 @@ body{
 
         <button class="tool note"
         onclick="addSticky(mainWrap)">
-          ＋ Add Note
+          📝 Add Note
         </button>
 
         <button class="tool clear"
@@ -560,136 +507,32 @@ body{
           🗑 Clear
         </button>
 
+        <button class="tool add-card"
+        onclick="createWorkingNote()">
+          ＋ Add Working Note
+        </button>
+
         <div class="size-wrap">
+
           <span>Size</span>
-          <input type="range" min="1" max="12" value="2" id="sizeSlider">
+
+          <input type="range"
+          min="1"
+          max="12"
+          value="2"
+          id="sizeSlider">
+
         </div>
 
       </div>
-
-      <!-- MAIN CANVAS -->
 
       <div class="main-canvas-wrap" id="mainWrap">
         <canvas id="wsCanvas"></canvas>
       </div>
 
-      <!-- NOTES -->
-
       <div class="notes-area">
 
-        <div class="notes-title">
-          Working Notes
-        </div>
-
-        <div class="notes-grid">
-
-          <!-- NOTE 1 -->
-
-          <div class="note-card">
-
-            <div class="note-head">
-              <div class="note-num">1</div>
-              <h3>Working Note 1</h3>
-            </div>
-
-            <div class="note-body">
-              <canvas></canvas>
-            </div>
-
-            <div class="note-footer">
-
-              <button class="small-btn black">Pencil</button>
-
-              <button class="small-btn gray">Eraser</button>
-
-              <button class="small-btn red">Clear</button>
-
-              <button class="small-btn gold">Note</button>
-
-            </div>
-
-          </div>
-
-          <!-- NOTE 2 -->
-
-          <div class="note-card">
-
-            <div class="note-head">
-              <div class="note-num">2</div>
-              <h3>Working Note 2</h3>
-            </div>
-
-            <div class="note-body">
-              <canvas></canvas>
-            </div>
-
-            <div class="note-footer">
-
-              <button class="small-btn black">Pencil</button>
-
-              <button class="small-btn gray">Eraser</button>
-
-              <button class="small-btn red">Clear</button>
-
-              <button class="small-btn gold">Note</button>
-
-            </div>
-
-          </div>
-
-          <!-- NOTE 3 -->
-
-          <div class="note-card">
-
-            <div class="note-head">
-              <div class="note-num">3</div>
-              <h3>Working Note 3</h3>
-            </div>
-
-            <div class="note-body">
-              <canvas></canvas>
-            </div>
-
-            <div class="note-footer">
-
-              <button class="small-btn black">Pencil</button>
-
-              <button class="small-btn gray">Eraser</button>
-
-              <button class="small-btn red">Clear</button>
-
-              <button class="small-btn gold">Note</button>
-
-            </div>
-
-          </div>
-
-          <!-- NOTE 4 -->
-
-          <div class="note-card">
-
-            <div class="note-head">
-              <div class="note-num">4</div>
-              <h3>Working Note 4</h3>
-            </div>
-
-            <div class="note-body">
-              <canvas></canvas>
-            </div>
-
-            <div class="note-footer">
-
-              <button class="small-btn black">Pencil</button>
-
-              <button class="small-btn gray">Eraser</button>
-
-              <button class="small-btn red">Clear</button>
-
-              <button class="small-btn gold">Note</button>
-
-            </div>
-
-          </div>
+        <div class="notes-grid" id="notesGrid">
 
         </div>
 
@@ -703,13 +546,14 @@ body{
 
 <script>
 
-/* IMAGE PREVIEW */
+/* IMAGE */
 
 const fileInp = document.getElementById('fileInp');
 
-fileInp.addEventListener('change', function(e){
+fileInp.addEventListener('change',function(e){
 
   const file = e.target.files[0];
+
   if(!file) return;
 
   const reader = new FileReader();
@@ -735,9 +579,9 @@ const ctx = canvas.getContext('2d');
 
 const mainWrap = document.getElementById('mainWrap');
 
-let drawing = false;
-let tool = 'pencil';
-let size = 2;
+let drawing=false;
+let tool='pencil';
+let size=2;
 
 function resizeCanvas(){
 
@@ -748,96 +592,93 @@ function resizeCanvas(){
 
 resizeCanvas();
 
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize',resizeCanvas);
 
-function getPos(e, targetCanvas){
+function getPos(e,target){
 
-  const rect = targetCanvas.getBoundingClientRect();
+  const rect = target.getBoundingClientRect();
 
   return{
+
     x:(e.touches ? e.touches[0].clientX : e.clientX)-rect.left,
+
     y:(e.touches ? e.touches[0].clientY : e.clientY)-rect.top
+
   };
 
 }
 
-let lastX,lastY;
-
-/* MAIN START */
+let lx,ly;
 
 canvas.addEventListener('mousedown',startDraw);
 canvas.addEventListener('touchstart',startDraw);
 
 function startDraw(e){
 
-  drawing = true;
+  drawing=true;
 
-  const pos = getPos(e, canvas);
+  const p=getPos(e,canvas);
 
-  lastX = pos.x;
-  lastY = pos.y;
+  lx=p.x;
+  ly=p.y;
 
 }
 
-/* MAIN DRAW */
+canvas.addEventListener('mousemove',draw);
+canvas.addEventListener('touchmove',draw);
 
-canvas.addEventListener('mousemove',drawMain);
-canvas.addEventListener('touchmove',drawMain);
-
-function drawMain(e){
+function draw(e){
 
   if(!drawing) return;
 
   e.preventDefault();
 
-  const pos = getPos(e, canvas);
+  const p=getPos(e,canvas);
 
   ctx.beginPath();
 
-  ctx.globalCompositeOperation =
-  tool === 'eraser'
+  ctx.globalCompositeOperation=
+  tool==='eraser'
   ? 'destination-out'
   : 'source-over';
 
-  ctx.strokeStyle = '#ff6b35';
+  ctx.strokeStyle='#ff6b35';
 
-  ctx.lineWidth =
-  tool === 'eraser'
-  ? size * 10
-  : size + 2;
+  ctx.lineWidth=
+  tool==='eraser'
+  ? size*10
+  : size+2;
 
-  ctx.lineCap = 'round';
+  ctx.lineCap='round';
 
-  ctx.moveTo(lastX,lastY);
-  ctx.lineTo(pos.x,pos.y);
+  ctx.moveTo(lx,ly);
+  ctx.lineTo(p.x,p.y);
 
   ctx.stroke();
 
-  lastX = pos.x;
-  lastY = pos.y;
+  lx=p.x;
+  ly=p.y;
 
 }
 
 window.addEventListener('mouseup',()=>drawing=false);
 window.addEventListener('touchend',()=>drawing=false);
 
-/* TOOL BUTTONS */
-
-document.getElementById('pencilBtn').onclick = ()=>{
+document.getElementById('pencilBtn').onclick=()=>{
 
   tool='pencil';
 
 };
 
-document.getElementById('eraserBtn').onclick = ()=>{
+document.getElementById('eraserBtn').onclick=()=>{
 
   tool='eraser';
 
 };
 
-document.getElementById('sizeSlider').oninput = (e)=>{
+document.getElementById('sizeSlider').oninput=(e)=>{
 
-  size = parseInt(e.target.value);
+  size=parseInt(e.target.value);
 
 };
 
@@ -847,122 +688,178 @@ function clearMain(){
 
 }
 
-/* NOTE CARDS */
+/* WORKING NOTES */
 
-const noteCards = document.querySelectorAll('.note-card');
+let noteCount=0;
 
-noteCards.forEach((card)=>{
+function createWorkingNote(){
 
-  const noteCanvas = card.querySelector('canvas');
-  const body = card.querySelector('.note-body');
+  noteCount++;
 
-  const pencilBtn = card.querySelector('.black');
-  const eraserBtn = card.querySelector('.gray');
-  const clearBtn = card.querySelector('.red');
-  const noteBtn = card.querySelector('.gold');
+  const grid=document.getElementById('notesGrid');
 
-  noteCanvas.width = body.offsetWidth;
-  noteCanvas.height = body.offsetHeight;
+  const card=document.createElement('div');
 
-  const noteCtx = noteCanvas.getContext('2d');
+  card.className='note-card';
 
-  let noteDrawing = false;
-  let noteTool = 'pencil';
+  card.innerHTML=`
+
+    <div class="note-head">
+
+      <div class="note-num">${noteCount}</div>
+
+      <h3>Working Note ${noteCount}</h3>
+
+    </div>
+
+    <div class="note-body">
+      <canvas></canvas>
+    </div>
+
+    <div class="note-footer">
+
+      <button class="small-btn black">
+        Pencil
+      </button>
+
+      <button class="small-btn gray">
+        Eraser
+      </button>
+
+      <button class="small-btn red">
+        Clear
+      </button>
+
+      <button class="small-btn gold">
+        Note
+      </button>
+
+    </div>
+
+  `;
+
+  grid.appendChild(card);
+
+  setupNoteCard(card);
+
+}
+
+/* NOTE CARD FUNCTION */
+
+function setupNoteCard(card){
+
+  const canvas=card.querySelector('canvas');
+
+  const body=card.querySelector('.note-body');
+
+  canvas.width=body.offsetWidth;
+  canvas.height=body.offsetHeight;
+
+  const ctx=canvas.getContext('2d');
+
+  let drawing=false;
+  let tool='pencil';
 
   let lx,ly;
 
-  function getNotePos(e){
+  function getPos(e){
 
-    const rect = noteCanvas.getBoundingClientRect();
+    const rect=canvas.getBoundingClientRect();
 
     return{
+
       x:(e.touches ? e.touches[0].clientX : e.clientX)-rect.left,
+
       y:(e.touches ? e.touches[0].clientY : e.clientY)-rect.top
+
     };
 
   }
 
-  noteCanvas.addEventListener('mousedown',startNote);
-  noteCanvas.addEventListener('touchstart',startNote);
+  canvas.addEventListener('mousedown',start);
+  canvas.addEventListener('touchstart',start);
 
-  function startNote(e){
+  function start(e){
 
-    noteDrawing = true;
+    drawing=true;
 
-    const p = getNotePos(e);
+    const p=getPos(e);
 
-    lx = p.x;
-    ly = p.y;
+    lx=p.x;
+    ly=p.y;
 
   }
 
-  noteCanvas.addEventListener('mousemove',drawNote);
-  noteCanvas.addEventListener('touchmove',drawNote);
+  canvas.addEventListener('mousemove',draw);
+  canvas.addEventListener('touchmove',draw);
 
-  function drawNote(e){
+  function draw(e){
 
-    if(!noteDrawing) return;
+    if(!drawing) return;
 
     e.preventDefault();
 
-    const p = getNotePos(e);
+    const p=getPos(e);
 
-    noteCtx.beginPath();
+    ctx.beginPath();
 
-    noteCtx.globalCompositeOperation =
-    noteTool === 'eraser'
+    ctx.globalCompositeOperation=
+    tool==='eraser'
     ? 'destination-out'
     : 'source-over';
 
-    noteCtx.strokeStyle = '#222';
+    ctx.strokeStyle='#222';
 
-    noteCtx.lineWidth =
-    noteTool === 'eraser'
+    ctx.lineWidth=
+    tool==='eraser'
     ? 18
     : 2;
 
-    noteCtx.lineCap = 'round';
+    ctx.lineCap='round';
 
-    noteCtx.moveTo(lx,ly);
-    noteCtx.lineTo(p.x,p.y);
+    ctx.moveTo(lx,ly);
+    ctx.lineTo(p.x,p.y);
 
-    noteCtx.stroke();
+    ctx.stroke();
 
-    lx = p.x;
-    ly = p.y;
+    lx=p.x;
+    ly=p.y;
 
   }
 
-  window.addEventListener('mouseup',()=>noteDrawing=false);
-  window.addEventListener('touchend',()=>noteDrawing=false);
+  window.addEventListener('mouseup',()=>drawing=false);
+  window.addEventListener('touchend',()=>drawing=false);
 
-  /* BUTTONS */
+  const pencilBtn=card.querySelector('.black');
+  const eraserBtn=card.querySelector('.gray');
+  const clearBtn=card.querySelector('.red');
+  const noteBtn=card.querySelector('.gold');
 
-  pencilBtn.onclick = ()=>{
+  pencilBtn.onclick=()=>{
 
-    noteTool='pencil';
-
-  };
-
-  eraserBtn.onclick = ()=>{
-
-    noteTool='eraser';
+    tool='pencil';
 
   };
 
-  clearBtn.onclick = ()=>{
+  eraserBtn.onclick=()=>{
 
-    noteCtx.clearRect(0,0,noteCanvas.width,noteCanvas.height);
+    tool='eraser';
 
   };
 
-  noteBtn.onclick = ()=>{
+  clearBtn.onclick=()=>{
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  };
+
+  noteBtn.onclick=()=>{
 
     addSticky(body);
 
   };
 
-});
+}
 
 /* STICKY */
 
@@ -976,10 +873,43 @@ function addSticky(parent){
   note.style.top='20px';
 
   note.innerHTML=`
-  <textarea placeholder="Write here..."></textarea>
+
+    <div class="sticky-top">
+
+      <button class="sticky-clear">
+        ✕
+      </button>
+
+    </div>
+
+    <textarea
+    placeholder="Write here..."></textarea>
+
   `;
 
   parent.appendChild(note);
+
+  const textarea=note.querySelector('textarea');
+
+  const clearBtn=note.querySelector('.sticky-clear');
+
+  clearBtn.onclick=()=>{
+
+    note.remove();
+
+  };
+
+  textarea.addEventListener('mousedown',(e)=>{
+
+    e.stopPropagation();
+
+  });
+
+  textarea.addEventListener('touchstart',(e)=>{
+
+    e.stopPropagation();
+
+  });
 
   dragElement(note);
 
@@ -989,48 +919,73 @@ function addSticky(parent){
 
 function dragElement(el){
 
-  let pos1 = 0,
-      pos2 = 0,
-      pos3 = 0,
-      pos4 = 0;
+  let startX=0;
+  let startY=0;
+  let initialX=0;
+  let initialY=0;
 
-  el.onmousedown = dragMouseDown;
+  el.addEventListener('mousedown',dragStart);
+  el.addEventListener('touchstart',dragStart);
 
-  function dragMouseDown(e){
+  function dragStart(e){
 
-    e.preventDefault();
-
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-
-    document.onmouseup = closeDragElement;
-    document.onmousemove = elementDrag;
-
-  }
-
-  function elementDrag(e){
+    if(e.target.tagName==='TEXTAREA') return;
 
     e.preventDefault();
 
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
+    initialX=
+    e.touches ? e.touches[0].clientX : e.clientX;
 
-    pos3 = e.clientX;
-    pos4 = e.clientY;
+    initialY=
+    e.touches ? e.touches[0].clientY : e.clientY;
 
-    el.style.top = (el.offsetTop - pos2) + "px";
-    el.style.left = (el.offsetLeft - pos1) + "px";
+    document.addEventListener('mousemove',drag);
+    document.addEventListener('mouseup',dragEnd);
+
+    document.addEventListener('touchmove',drag);
+    document.addEventListener('touchend',dragEnd);
 
   }
 
-  function closeDragElement(){
+  function drag(e){
 
-    document.onmouseup = null;
-    document.onmousemove = null;
+    e.preventDefault();
+
+    startX=
+    (e.touches ? e.touches[0].clientX : e.clientX)-initialX;
+
+    startY=
+    (e.touches ? e.touches[0].clientY : e.clientY)-initialY;
+
+    initialX=
+    e.touches ? e.touches[0].clientX : e.clientX;
+
+    initialY=
+    e.touches ? e.touches[0].clientY : e.clientY;
+
+    el.style.top=(el.offsetTop+startY)+"px";
+    el.style.left=(el.offsetLeft+startX)+"px";
+
+  }
+
+  function dragEnd(){
+
+    document.removeEventListener('mousemove',drag);
+    document.removeEventListener('mouseup',dragEnd);
+
+    document.removeEventListener('touchmove',drag);
+    document.removeEventListener('touchend',dragEnd);
 
   }
 
 }
+
+/* DEFAULT NOTES */
+
+createWorkingNote();
+createWorkingNote();
+createWorkingNote();
+createWorkingNote();
 
 </script>
 
