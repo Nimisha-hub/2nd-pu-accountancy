@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Partner's Capital A/c</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f6fb;
+padding:20px;
+overflow-x:hidden;
+}
+
+/* MAIN */
+
+.main-layout{
+display:grid;
+grid-template-columns:80% 20%;
+gap:20px;
+align-items:start;
+}
+
+/* LEFT */
+
+.left-section{
+background:white;
+padding:24px;
+border-radius:26px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+position:relative;
+overflow:hidden;
+}
+
+/* TOOLBAR */
+
+.toolbar{
+display:flex;
+gap:12px;
+margin-bottom:24px;
+flex-wrap:wrap;
+}
+
+.toolbar button{
+background:#111;
+color:white;
+border:none;
+border-radius:14px;
+padding:14px 22px;
+font-size:15px;
+cursor:pointer;
+font-weight:600;
+transition:0.25s;
+}
+
+.toolbar button:hover{
+background:#333;
+transform:translateY(-2px);
+}
+
+.active-tool{
+background:#4d6fff !important;
+}
+
+/* TITLE */
+
+.title{
+text-align:center;
+font-size:58px;
+font-weight:bold;
+margin-bottom:26px;
+}
+
+/* TABLE */
+
+.table-wrapper{
+width:100%;
+overflow:hidden;
+border-radius:20px;
+border:2px solid #dfe5ff;
+position:relative;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+background:white;
+}
+
+/* CELLS */
+
+th,td{
+border:2px solid #444;
+height:88px;
+padding:10px;
+font-size:17px;
+vertical-align:middle;
+word-break:break-word;
+position:relative;
+}
+
+th{
+background:#eef2ff;
+font-weight:bold;
+}
+
+td:hover{
+background:#f8f9ff;
+}
+
+/* WIDTHS */
+
+.particular-col{
+width:320px;
+min-width:320px;
+}
+
+.amount-col{
+width:160px;
+min-width:160px;
+}
+
+/* RESIZE HANDLE */
+
+.resize-handle{
+position:absolute;
+top:0;
+right:-5px;
+width:10px;
+height:100%;
+cursor:col-resize;
+z-index:100;
+}
+
+/* INPUT */
+
+input{
+width:100%;
+border:none;
+outline:none;
+background:transparent;
+font-size:17px;
+font-weight:bold;
+text-align:center;
+}
+
+/* DROP CELL */
+
+.drop-cell{
+cursor:text;
+}
+
+.drop-cell.hover{
+background:#dfe9ff;
+}
+
+/* RIGHT */
+
+.right-section{
+background:white;
+padding:20px;
+border-radius:26px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+min-height:500px;
+overflow:hidden;
+}
+
+/* ENTRY */
+
+.cards-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+}
+
+.cards-title{
+font-size:28px;
+font-weight:bold;
+}
+
+.cards-sub{
+font-size:12px;
+color:#666;
+}
+
+/* INPUT AREA */
+
+.input-area{
+display:flex;
+gap:8px;
+margin-bottom:18px;
+align-items:center;
+}
+
+/* PLACEHOLDER SMALL */
+
+.input-area input{
+flex:1;
+height:44px;
+border:2px solid #ddd;
+border-radius:14px;
+padding:0 12px;
+font-size:12px;
+text-align:left;
+font-weight:normal;
+min-width:0;
+}
+
+.input-area input::placeholder{
+font-size:11px;
+color:#777;
+}
+
+.input-area input:focus{
+border-color:#4d6fff;
+}
+
+/* SMALL BUTTON */
+
+.generate-btn{
+background:#111;
+color:white;
+border:none;
+border-radius:12px;
+padding:0 12px;
+height:44px;
+cursor:pointer;
+font-size:12px;
+font-weight:600;
+transition:0.25s;
+white-space:nowrap;
+min-width:90px;
+}
+
+.generate-btn:hover{
+background:#333;
+}
+
+/* CARDS */
+
+.cards-container{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+align-content:flex-start;
+}
+
+/* CARD */
+
+.card{
+width:115px;
+min-height:76px;
+background:white;
+border-radius:16px;
+padding:10px;
+cursor:grab;
+user-select:none;
+box-shadow:0 4px 14px rgba(0,0,0,0.08);
+border-left:5px solid #4d6fff;
+transition:0.25s;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.card:hover{
+transform:translateY(-3px);
+}
+
+.card.cr{
+border-left:5px solid #18b97a;
+}
+
+.badge{
+width:38px;
+height:20px;
+border-radius:999px;
+background:#e9efff;
+color:#4d6fff;
+font-size:10px;
+font-weight:bold;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.card.cr .badge{
+background:#dff7ed;
+color:#18b97a;
+}
+
+.card-name{
+font-size:12px;
+font-weight:bold;
+margin-top:6px;
+}
+
+.card-amount{
+font-size:12px;
+font-weight:bold;
+margin-top:4px;
+}
+
+.drag{
+font-size:10px;
+text-align:right;
+margin-top:6px;
+color:#888;
+}
+
+/* CANVAS */
+
+#drawCanvas{
+position:absolute;
+top:0;
+left:0;
+z-index:999;
+pointer-events:none;
+}
+
+/* MOBILE */
+
+@media(max-width:1100px){
+
+.main-layout{
+grid-template-columns:1fr;
+}
+
+.title{
+font-size:42px;
+}
+
+}
+
+/* BACK BUTTON */
+
+.back-btn{
+background:linear-gradient(135deg,#4d6fff,#7a5cff) !important;
+color:white;
+border:none;
+border-radius:14px;
+padding:14px 22px;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 6px 18px rgba(77,111,255,0.25);
+}
+
+.back-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 24px rgba(77,111,255,0.35);
+}
+</style>
+</head>
+
+<body>
+    
+
+<div class="top-nav">
+
+
+<!-- 
+<button class="page-btn bank-btn" onclick="goBack()">
+← Back
+</button> -->
+
+</div>
+<div class="main-layout">
+
+<!-- LEFT -->
+
+<div class="left-section">
+
+<div class="toolbar">
+    <button class="back-btn" onclick="goBack()">
+← Back
+</button>
+
+<button onclick="addRow()">
++ Add Row
+</button>
+
+<button onclick="addPartner()">
++ Add Partner
+</button>
+
+<button id="pencilBtn" onclick="enablePencil()">
+✏ Pencil
+</button>
+
+<button id="typingBtn" onclick="enableTyping()">
+⌨ Typing
+</button>
+
+<button id="eraserBtn" onclick="enableEraser()">
+🧽 Eraser
+</button>
+
+<button onclick="clearCanvas()">
+🧹 Clear
+</button>
+
+</div>
+
+<div class="title">
+Partner's Capital A/c
+</div>
+
+<div class="table-wrapper" id="tableWrapper">
+
+<canvas id="drawCanvas"></canvas>
+
+<table id="mainTable">
+
+<thead>
+
+<tr>
+<th colspan="4">Dr.</th>
+<th colspan="4">Cr.</th>
+</tr>
+
+<tr id="partnerHeader">
+
+<th class="particular-col">
+Particulars
+<div class="resize-handle"></div>
+</th>
+
+<th class="amount-col">
+<input value="Akshaya">
+<div class="resize-handle"></div>
+</th>
+
+<th class="amount-col">
+<input value="Abhishek">
+<div class="resize-handle"></div>
+</th>
+
+<th class="amount-col">
+<input value="Abhijeet">
+<div class="resize-handle"></div>
+</th>
+
+<th class="particular-col">
+Particulars
+<div class="resize-handle"></div>
+</th>
+
+<th class="amount-col">
+<input value="Akshaya">
+<div class="resize-handle"></div>
+</th>
+
+<th class="amount-col">
+<input value="Abhishek">
+<div class="resize-handle"></div>
+</th>
+
+<th class="amount-col">
+<input value="Abhijeet">
+<div class="resize-handle"></div>
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="bodyRows">
+
+<tr>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+</tr>
+
+<tr>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+</tr>
+
+<tr>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+</tr>
+
+<tr>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+<td class="drop-cell" contenteditable="true"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="right-section">
+
+<div class="cards-top">
+
+<div class="cards-title">
+Entry Cards
+</div>
+
+<div class="cards-sub">
+Drag → Table
+</div>
+
+</div>
+
+<div class="input-area">
+
+<input
+type="text"
+id="cardInput"
+placeholder="By Building 12000"
+>
+
+<button class="generate-btn" onclick="generateCard()">
+Generate
+</button>
+
+</div>
+
+<div class="cards-container" id="cardsContainer"></div>
+
+</div>
+
+</div>
+
+<script>
+
+/* CARD */
+
+let currentDraggedCard = null;
+
+function generateCard(){
+
+const value =
+document.getElementById('cardInput').value.trim();
+
+if(!value) return;
+
+let type = "DR";
+
+if(value.toLowerCase().includes("by")){
+type = "CR";
+}
+
+const amountMatch =
+value.match(/(\d[\d,]*)/);
+
+let amount = "";
+
+if(amountMatch){
+amount = amountMatch[0];
+}
+
+const name =
+value.replace(/₹?[\d,]+/g,'').trim();
+
+const card =
+document.createElement('div');
+
+card.className =
+type === "CR"
+? "card cr"
+: "card";
+
+card.draggable = true;
+
+card.innerHTML = `
+
+<div class="badge">${type}</div>
+
+<div class="card-name">${name}</div>
+
+<div class="card-amount">${amount}</div>
+
+<div class="drag">drag</div>
+
+`;
+
+card.dataset.name = name;
+card.dataset.amount = amount;
+
+card.addEventListener('dragstart', ()=>{
+
+currentDraggedCard = card;
+
+});
+
+document.getElementById('cardsContainer')
+.appendChild(card);
+
+document.getElementById('cardInput').value = "";
+
+}
+
+/* ENTER */
+
+document.getElementById("cardInput")
+.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+generateCard();
+}
+
+});
+function goBack(){
+
+window.location.href="index.html";
+
+}
+/* DROP */
+
+function activateCells(){
+
+document.querySelectorAll('.drop-cell')
+.forEach(cell=>{
+
+cell.contentEditable = "true";
+
+cell.addEventListener('dragover', e=>{
+
+e.preventDefault();
+cell.classList.add('hover');
+
+});
+
+cell.addEventListener('dragleave', ()=>{
+
+cell.classList.remove('hover');
+
+});
+
+cell.addEventListener('drop', e=>{
+
+e.preventDefault();
+
+cell.classList.remove('hover');
+
+if(!currentDraggedCard) return;
+
+cell.innerHTML = `
+${currentDraggedCard.dataset.name}
+<br>
+<b>${currentDraggedCard.dataset.amount}</b>
+`;
+
+currentDraggedCard.remove();
+
+});
+
+});
+
+}
+
+activateCells();
+
+/* ADD ROW */
+
+function addRow(){
+
+const totalCols =
+document.querySelector("#partnerHeader")
+.children.length;
+
+const row =
+document.createElement('tr');
+
+for(let i=0;i<totalCols;i++){
+
+const td =
+document.createElement('td');
+
+td.className = "drop-cell";
+td.contentEditable = "true";
+
+row.appendChild(td);
+
+}
+
+document.getElementById('bodyRows')
+.appendChild(row);
+
+activateCells();
+
+}
+
+/* ADD PARTNER */
+
+function addPartner(){
+
+const partnerName =
+prompt("Enter Partner Name");
+
+if(!partnerName) return;
+
+const header =
+document.getElementById('partnerHeader');
+
+const th1 =
+document.createElement('th');
+
+th1.className = "amount-col";
+
+th1.innerHTML = `
+<input value="${partnerName}">
+<div class="resize-handle"></div>
+`;
+
+header.insertBefore(th1,header.children[4]);
+
+const th2 =
+document.createElement('th');
+
+th2.className = "amount-col";
+
+th2.innerHTML = `
+<input value="${partnerName}">
+<div class="resize-handle"></div>
+`;
+
+header.appendChild(th2);
+
+document.querySelectorAll('#bodyRows tr')
+.forEach(row=>{
+
+const td1 =
+document.createElement('td');
+
+td1.className = "drop-cell";
+td1.contentEditable = "true";
+
+row.insertBefore(td1,row.children[4]);
+
+const td2 =
+document.createElement('td');
+
+td2.className = "drop-cell";
+td2.contentEditable = "true";
+
+row.appendChild(td2);
+
+});
+
+activateCells();
+
+enableResize();
+
+resizeCanvas();
+
+}
+
+/* RESIZE */
+
+function enableResize(){
+
+const handles =
+document.querySelectorAll(".resize-handle");
+
+handles.forEach(handle=>{
+
+handle.onmousedown = function(e){
+
+e.preventDefault();
+
+const th =
+handle.parentElement;
+
+let startX = e.pageX;
+let startWidth = th.offsetWidth;
+
+document.onmousemove = function(e){
+
+let newWidth =
+startWidth + (e.pageX - startX);
+
+if(newWidth > 70){
+
+th.style.width =
+newWidth + "px";
+
+}
+
+resizeCanvas();
+
+};
+
+document.onmouseup = function(){
+
+document.onmousemove = null;
+document.onmouseup = null;
+
+};
+
+};
+
+});
+
+}
+
+enableResize();
+
+/* DRAWING */
+
+const canvas =
+document.getElementById('drawCanvas');
+
+const wrapper =
+document.getElementById('tableWrapper');
+
+const ctx =
+canvas.getContext('2d');
+
+function resizeCanvas(){
+
+canvas.width = wrapper.offsetWidth;
+canvas.height = wrapper.offsetHeight;
+
+}
+
+resizeCanvas();
+
+window.addEventListener("resize",resizeCanvas);
+
+let drawing = false;
+let currentTool = "typing";
+
+/* TYPING */
+
+function enableTyping(){
+
+currentTool = "typing";
+
+canvas.style.pointerEvents = "none";
+
+document.getElementById("typingBtn")
+.classList.add("active-tool");
+
+document.getElementById("pencilBtn")
+.classList.remove("active-tool");
+
+document.getElementById("eraserBtn")
+.classList.remove("active-tool");
+
+}
+
+/* PENCIL */
+
+function enablePencil(){
+
+currentTool = "pencil";
+
+canvas.style.pointerEvents = "auto";
+
+document.getElementById("pencilBtn")
+.classList.add("active-tool");
+
+document.getElementById("typingBtn")
+.classList.remove("active-tool");
+
+document.getElementById("eraserBtn")
+.classList.remove("active-tool");
+
+}
+
+/* ERASER */
+
+function enableEraser(){
+
+currentTool = "eraser";
+
+canvas.style.pointerEvents = "auto";
+
+document.getElementById("eraserBtn")
+.classList.add("active-tool");
+
+document.getElementById("typingBtn")
+.classList.remove("active-tool");
+
+document.getElementById("pencilBtn")
+.classList.remove("active-tool");
+
+}
+
+/* DEFAULT */
+
+enableTyping();
+
+/* START DRAW */
+
+canvas.addEventListener("mousedown",function(e){
+
+if(currentTool==="typing") return;
+
+drawing = true;
+
+ctx.beginPath();
+
+ctx.moveTo(e.offsetX,e.offsetY);
+
+});
+
+/* DRAW */
+
+canvas.addEventListener("mousemove",function(e){
+
+if(!drawing) return;
+
+ctx.lineCap = "round";
+
+if(currentTool==="eraser"){
+
+ctx.globalCompositeOperation =
+"destination-out";
+
+ctx.lineWidth = 24;
+
+}else{
+
+ctx.globalCompositeOperation =
+"source-over";
+
+ctx.strokeStyle = "#111";
+
+ctx.lineWidth = 3;
+
+}
+
+ctx.lineTo(e.offsetX,e.offsetY);
+
+ctx.stroke();
+
+});
+
+/* STOP */
+
+canvas.addEventListener("mouseup",function(){
+
+drawing = false;
+
+});
+
+canvas.addEventListener("mouseleave",function(){
+
+drawing = false;
+
+});
+
+/* CLEAR */
+
+function clearCanvas(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+}
+
+</script>
+
+</body>
+</html>

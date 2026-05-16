@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>2nd PU Accountancy</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f6fb;
+padding:18px;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+/* TOP */
+
+.top-nav{
+display:flex;
+gap:14px;
+margin-bottom:18px;
+}
+
+.page-btn{
+padding:14px 24px;
+border:none;
+border-radius:16px;
+background:#111;
+color:white;
+font-size:16px;
+font-weight:600;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* MAIN */
+
+.main-layout{
+display:grid;
+grid-template-columns:58% 42%;
+gap:20px;
+}
+
+/* LEFT */
+
+.left-panel{
+background:white;
+padding:24px;
+border-radius:28px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* BUTTONS */
+
+.top-buttons{
+display:flex;
+gap:12px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.top-buttons button{
+background:#111;
+color:white;
+border:none;
+padding:14px 20px;
+border-radius:16px;
+font-size:15px;
+cursor:pointer;
+transition:0.25s;
+font-weight:600;
+}
+
+.top-buttons button:hover{
+transform:translateY(-3px);
+background:#333;
+}
+
+.tool-active{
+background:#4d6fff !important;
+}
+
+/* TITLE */
+
+.title{
+text-align:center;
+font-size:44px;
+font-weight:700;
+margin-bottom:22px;
+}
+
+/* TABLE */
+
+.table-wrapper{
+position:relative;
+overflow:auto;
+border-radius:18px;
+}
+
+.reval-table{
+width:100%;
+border-collapse:collapse;
+table-layout:fixed;
+background:white;
+}
+
+.reval-table th,
+.reval-table td{
+border:2px solid #333;
+height:72px;
+padding:10px;
+position:relative;
+transition:0.2s;
+}
+
+.reval-table td:hover{
+background:#f2f5ff;
+}
+
+.reval-table th{
+background:#eef2ff;
+font-size:18px;
+}
+
+.reval-table input{
+width:100%;
+height:100%;
+border:none;
+outline:none;
+font-size:18px;
+background:transparent;
+padding:6px;
+}
+
+.reval-table input:focus{
+background:#fff8d8;
+border-radius:8px;
+}
+
+.total-row{
+background:#f7f7f7;
+font-weight:bold;
+font-size:18px;
+}
+
+/* DRAW LAYER */
+
+#drawLayer{
+position:absolute;
+top:0;
+left:0;
+z-index:5;
+pointer-events:none;
+}
+
+/* RIGHT PANEL */
+
+.right-panel{
+background:white;
+padding:24px;
+border-radius:28px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+
+display:flex;
+flex-direction:column;
+height:850px;
+overflow:hidden;
+}
+
+/* HEADER */
+
+.cards-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+}
+
+.cards-header h2{
+font-size:34px;
+}
+
+/* INPUT */
+
+.card-input-area{
+display:flex;
+gap:12px;
+margin-bottom:18px;
+}
+
+.card-input-area input{
+flex:1;
+padding:18px;
+border-radius:18px;
+border:2px solid #ddd;
+font-size:17px;
+outline:none;
+transition:0.25s;
+}
+
+.card-input-area input:focus{
+border-color:#4d6fff;
+box-shadow:0 0 0 4px rgba(77,111,255,0.12);
+}
+
+.card-input-area button{
+background:#111;
+color:white;
+border:none;
+padding:18px 24px;
+border-radius:18px;
+font-size:16px;
+cursor:pointer;
+transition:0.25s;
+font-weight:bold;
+}
+
+.card-input-area button:hover{
+background:#333;
+transform:translateY(-2px);
+}
+
+/* CARDS */
+
+.cards-scroll{
+flex:1;
+overflow-y:auto;
+padding-right:5px;
+}
+
+.cards-scroll::-webkit-scrollbar{
+width:6px;
+}
+
+.cards-scroll::-webkit-scrollbar-thumb{
+background:#bbb;
+border-radius:20px;
+}
+
+.cards-container{
+display:flex;
+flex-wrap:wrap;
+gap:14px;
+align-content:flex-start;
+}
+
+/* CARD */
+
+.card{
+width:170px;
+min-height:100px;
+background:white;
+border-radius:20px;
+padding:14px;
+box-shadow:0 4px 14px rgba(0,0,0,0.08);
+border-left:6px solid #4d6fff;
+position:relative;
+transition:0.25s;
+cursor:grab;
+}
+
+.card:hover{
+transform:translateY(-5px) scale(1.03);
+box-shadow:0 10px 20px rgba(0,0,0,0.12);
+}
+
+.card.cr{
+border-left:6px solid #1db56c;
+}
+
+.tag{
+display:inline-block;
+padding:5px 12px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold;
+margin-bottom:10px;
+background:#e7edff;
+color:#4d6fff;
+}
+
+.card.cr .tag{
+background:#dff7ea;
+color:#1db56c;
+}
+
+.particular{
+font-size:16px;
+font-weight:600;
+line-height:1.3;
+margin-bottom:8px;
+word-break:break-word;
+}
+
+.amount{
+font-size:15px;
+font-weight:bold;
+}
+
+.card small{
+position:absolute;
+right:12px;
+bottom:10px;
+color:#aaa;
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+
+.main-layout{
+grid-template-columns:1fr;
+}
+
+.right-panel{
+height:auto;
+}
+
+.title{
+font-size:34px;
+}
+
+}
+.bank-btn{
+background:linear-gradient(135deg,#4d6fff,#7a5cff);
+color:white;
+border:none;
+box-shadow:
+0 6px 18px rgba(77,111,255,0.25),
+inset 0 1px 1px rgba(255,255,255,0.3);
+transition:0.3s;
+position:relative;
+overflow:hidden;
+}
+
+.bank-btn::before{
+content:'';
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:rgba(255,255,255,0.18);
+transform:skewX(-25deg);
+transition:0.5s;
+}
+
+.bank-btn:hover::before{
+left:120%;
+}
+
+.bank-btn:hover{
+transform:translateY(-4px);
+box-shadow:
+0 10px 24px rgba(77,111,255,0.35);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="top-nav">
+
+<button class="page-btn">
+Revaluation A/c
+</button>
+
+<button class="page-btn bank-btn" onclick="goToBankPage()">
+Back
+</button>
+
+
+</div>
+
+<div class="main-layout">
+
+<!-- LEFT -->
+
+<div class="left-panel">
+
+<div class="top-buttons">
+
+<button onclick="addRow()">+ Add Row</button>
+
+<button onclick="calculateTotals()">Calculate</button>
+
+<button id="typingBtn" onclick="setTool('typing')">
+⌨ Typing
+</button>
+
+<button id="pencilBtn" onclick="setTool('pencil')">
+✏ Pencil
+</button>
+
+<button id="eraserBtn" onclick="setTool('eraser')">
+🩹 Eraser
+</button>
+
+<button onclick="clearDrawing()">
+🧹 Clear
+</button>
+
+</div>
+
+<div class="title">
+Revaluation A/c
+</div>
+
+<div class="table-wrapper" id="tableWrapper">
+
+<canvas id="drawLayer"></canvas>
+
+<table class="reval-table">
+
+<tr>
+<th colspan="2">Dr.</th>
+<th colspan="2">Cr.</th>
+</tr>
+
+<tr>
+<th>Particulars</th>
+<th>Amount</th>
+<th>Particulars</th>
+<th>Amount</th>
+</tr>
+
+<tbody id="tableBody">
+
+<!-- DEFAULT 4 ROWS -->
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+</tbody>
+
+<tr class="total-row">
+<td>Total</td>
+<td id="drTotal">₹0</td>
+<td>Total</td>
+<td id="crTotal">₹0</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="right-panel">
+
+<div class="cards-header">
+
+<h2>Entry Cards</h2>
+
+<p>Generate Entries</p>
+
+</div>
+
+<div class="card-input-area">
+
+<input
+id="entryInput"
+placeholder="Example: By Building ₹12000"
+/>
+
+<button onclick="generateCard()">
+Generate
+</button>
+
+</div>
+
+<div class="cards-scroll">
+
+<div class="cards-container" id="cardsContainer">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* ADD ROW */
+
+function addRow(){
+
+const row=document.createElement("tr");
+
+row.innerHTML=`
+<td><input></td>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+`;
+
+document.getElementById("tableBody").appendChild(row);
+
+resizeCanvas();
+
+}
+function goToBankPage(){
+
+window.location.href="index.html";
+
+}
+
+/* CALCULATE TOTAL */
+
+function calculateTotals(){
+
+let dr=0;
+let cr=0;
+
+const rows=document.querySelectorAll("#tableBody tr");
+
+rows.forEach(row=>{
+
+const inputs=row.querySelectorAll("input");
+
+dr += Number(inputs[1].value) || 0;
+cr += Number(inputs[3].value) || 0;
+
+});
+
+document.getElementById("drTotal").innerText="₹"+dr;
+document.getElementById("crTotal").innerText="₹"+cr;
+
+}
+
+/* GENERATE CARD */
+
+function generateCard(){
+
+const input=document.getElementById("entryInput");
+
+if(input.value.trim()==="") return;
+
+const text=input.value;
+
+const amountMatch=text.match(/\d+/g);
+
+const amount=amountMatch ? amountMatch.join("") : "";
+
+const particulars=text.replace(/[0-9₹,]/g,'').trim();
+
+const type=text.toLowerCase().includes("by") ? "DR" : "CR";
+
+const card=document.createElement("div");
+
+card.className=type==="DR" ? "card" : "card cr";
+
+card.innerHTML=`
+
+<div class="tag">${type}</div>
+
+<div class="particular">
+${particulars}
+</div>
+
+<div class="amount">
+₹${amount}
+</div>
+
+<small>entry</small>
+
+`;
+
+document.getElementById("cardsContainer").appendChild(card);
+
+input.value="";
+
+}
+
+/* ENTER KEY */
+
+document.getElementById("entryInput")
+.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+generateCard();
+}
+
+});
+
+/* DRAWING */
+
+const canvas=document.getElementById("drawLayer");
+const wrapper=document.getElementById("tableWrapper");
+const ctx=canvas.getContext("2d");
+
+function resizeCanvas(){
+
+canvas.width=wrapper.scrollWidth;
+canvas.height=wrapper.scrollHeight;
+
+}
+
+resizeCanvas();
+
+window.addEventListener("resize",resizeCanvas);
+
+let drawing=false;
+let tool="typing";
+
+/* TOOL SWITCH */
+
+function setTool(selectedTool){
+
+tool=selectedTool;
+
+/* REMOVE ACTIVE */
+
+document.getElementById("typingBtn")
+.classList.remove("tool-active");
+
+document.getElementById("pencilBtn")
+.classList.remove("tool-active");
+
+document.getElementById("eraserBtn")
+.classList.remove("tool-active");
+
+/* ENABLE TYPING */
+
+if(tool==="typing"){
+
+canvas.style.pointerEvents="none";
+
+document.getElementById("typingBtn")
+.classList.add("tool-active");
+
+}
+
+/* ENABLE PENCIL */
+
+else if(tool==="pencil"){
+
+canvas.style.pointerEvents="auto";
+
+document.getElementById("pencilBtn")
+.classList.add("tool-active");
+
+}
+
+/* ENABLE ERASER */
+
+else if(tool==="eraser"){
+
+canvas.style.pointerEvents="auto";
+
+document.getElementById("eraserBtn")
+.classList.add("tool-active");
+
+}
+
+}
+
+/* DEFAULT */
+
+setTool("typing");
+
+/* START DRAW */
+
+canvas.addEventListener("mousedown",startDraw);
+
+function startDraw(e){
+
+if(tool==="typing") return;
+
+drawing=true;
+
+ctx.beginPath();
+
+ctx.moveTo(e.offsetX,e.offsetY);
+
+}
+
+/* DRAW */
+
+canvas.addEventListener("mousemove",draw);
+
+function draw(e){
+
+if(!drawing) return;
+
+ctx.lineCap="round";
+
+if(tool==="eraser"){
+
+ctx.globalCompositeOperation="destination-out";
+ctx.lineWidth=30;
+
+}else{
+
+ctx.globalCompositeOperation="source-over";
+ctx.strokeStyle="#111";
+ctx.lineWidth=4;
+
+}
+
+ctx.lineTo(e.offsetX,e.offsetY);
+
+ctx.stroke();
+
+}
+
+/* STOP */
+
+canvas.addEventListener("mouseup",stopDraw);
+
+canvas.addEventListener("mouseleave",stopDraw);
+
+function stopDraw(){
+
+drawing=false;
+
+}
+
+/* CLEAR */
+
+function clearDrawing(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+}
+
+</script>
+
+</body>
+</html>
