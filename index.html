@@ -18,7 +18,7 @@
 
 body{
   font-family:'Poppins',sans-serif;
-  background:#fafafa;
+  background:#f5f5f5;
   overflow:hidden;
 }
 
@@ -67,8 +67,9 @@ body{
   border:none;
   padding:10px 18px;
   border-radius:12px;
-  background:#f5f5f5;
+  background:#f3f3f3;
   cursor:pointer;
+  font-weight:600;
 }
 
 /* MAIN */
@@ -117,7 +118,7 @@ body{
   color:#888;
 }
 
-/* QUESTION */
+/* IMAGE */
 
 .upload-area{
   flex:1;
@@ -165,11 +166,12 @@ body{
   display:flex;
   align-items:center;
   gap:10px;
+  flex-wrap:wrap;
 }
 
 .tool{
   border:none;
-  padding:10px 18px;
+  padding:10px 16px;
   border-radius:12px;
   cursor:pointer;
   font-weight:600;
@@ -195,6 +197,10 @@ body{
   background:#dcffe5;
 }
 
+.type-btn{
+  background:#eadcff;
+}
+
 .size-wrap{
   margin-left:auto;
   display:flex;
@@ -206,7 +212,7 @@ body{
 
 .main-canvas-wrap{
   position:relative;
-  height:240px;
+  height:260px;
 
   background:
   repeating-linear-gradient(
@@ -215,6 +221,8 @@ body{
     #fff 31px,
     #f1f1f1 32px
   );
+
+  overflow:hidden;
 }
 
 #wsCanvas{
@@ -225,7 +233,7 @@ body{
   left:0;
 }
 
-/* NOTES */
+/* NOTES AREA */
 
 .notes-area{
   flex:1;
@@ -239,11 +247,11 @@ body{
   gap:14px;
 }
 
-/* CARD */
+/* NOTE CARD */
 
 .note-card{
   border:1px solid #eee;
-  border-radius:18px;
+  border-radius:20px;
   overflow:hidden;
   background:#fff;
 }
@@ -274,8 +282,10 @@ body{
 }
 
 .note-body{
-  height:180px;
+  height:260px;
   position:relative;
+
+  overflow:hidden;
 
   background:
   repeating-linear-gradient(
@@ -295,7 +305,7 @@ body{
 }
 
 .note-footer{
-  padding:10px;
+  padding:12px;
   border-top:1px solid #eee;
 
   display:flex;
@@ -305,7 +315,7 @@ body{
 
 .small-btn{
   border:none;
-  padding:7px 12px;
+  padding:8px 12px;
   border-radius:10px;
   cursor:pointer;
   font-size:12px;
@@ -313,7 +323,7 @@ body{
 }
 
 .black{
-  background:#eee;
+  background:#ececec;
 }
 
 .gray{
@@ -328,47 +338,67 @@ body{
   background:#fff2c7;
 }
 
+.purple{
+  background:#eadcff;
+}
+
 /* STICKY */
 
 .sticky{
   position:absolute;
 
-  width:150px;
-  min-height:130px;
+  width:250px;
+  height:180px;
 
-  background:#fff3a6;
+  min-width:80px;
+  min-height:80px;
+
+  background:#fff2a8;
 
   border-radius:16px;
 
-  padding:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
 
-  box-shadow:0 4px 10px rgba(0,0,0,.08);
+  overflow:hidden;
+
+  border:1px solid #f0d76d;
 
   z-index:100;
 }
 
-.sticky-top{
+.sticky-header{
+  height:40px;
+  background:#ffe978;
+
   display:flex;
-  justify-content:flex-end;
-  margin-bottom:5px;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 10px;
+
+  cursor:move;
 }
 
-.sticky-clear{
-  width:22px;
-  height:22px;
+.sticky-title{
+  font-size:13px;
+  font-weight:600;
+}
+
+.remove-btn{
+  width:24px;
+  height:24px;
 
   border:none;
   border-radius:50%;
 
-  background:#ffdddd;
-  color:#d33;
-
   cursor:pointer;
+
+  background:#ffd6d6;
 }
 
 .sticky textarea{
   width:100%;
-  height:80px;
+  height:calc(100% - 40px);
 
   border:none;
   outline:none;
@@ -376,8 +406,146 @@ body{
 
   background:transparent;
 
+  padding:10px;
+
   font-family:'Poppins',sans-serif;
-  font-size:13px;
+}
+
+/* TYPE BOX */
+
+.type-box{
+  position:absolute;
+
+  width:250px;
+  height:140px;
+
+  min-width:80px;
+  min-height:80px;
+
+  background:#fff;
+
+  border:2px dashed #a66cff;
+
+  border-radius:14px;
+
+  overflow:hidden;
+
+  z-index:120;
+}
+
+.type-header{
+  height:40px;
+  background:#f1e5ff;
+
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+
+  padding:0 10px;
+
+  cursor:move;
+}
+
+.type-content{
+  width:100%;
+  height:calc(100% - 40px);
+
+  padding:10px;
+
+  outline:none;
+
+  overflow:auto;
+}
+
+/* RESIZE HANDLE */
+
+.resize-handle{
+  position:absolute;
+  background:transparent;
+}
+
+/* CORNERS */
+
+.resize-handle.br{
+  width:16px;
+  height:16px;
+
+  right:0;
+  bottom:0;
+
+  cursor:nwse-resize;
+}
+
+.resize-handle.bl{
+  width:16px;
+  height:16px;
+
+  left:0;
+  bottom:0;
+
+  cursor:nesw-resize;
+}
+
+.resize-handle.tr{
+  width:16px;
+  height:16px;
+
+  right:0;
+  top:0;
+
+  cursor:nesw-resize;
+}
+
+.resize-handle.tl{
+  width:16px;
+  height:16px;
+
+  left:0;
+  top:0;
+
+  cursor:nwse-resize;
+}
+
+/* EDGES */
+
+.resize-handle.top{
+  top:0;
+  left:16px;
+
+  width:calc(100% - 32px);
+  height:10px;
+
+  cursor:ns-resize;
+}
+
+.resize-handle.bottom{
+  bottom:0;
+  left:16px;
+
+  width:calc(100% - 32px);
+  height:10px;
+
+  cursor:ns-resize;
+}
+
+.resize-handle.left{
+  left:0;
+  top:16px;
+
+  width:10px;
+  height:calc(100% - 32px);
+
+  cursor:ew-resize;
+}
+
+.resize-handle.right{
+  right:0;
+  top:16px;
+
+  width:10px;
+  height:calc(100% - 32px);
+
+  cursor:ew-resize;
 }
 
 /* MOBILE */
@@ -416,10 +584,10 @@ body{
 
   </div>
 
- <div class="nav-right">
+  <div class="nav-right">
 
   <button class="nav-btn"
-  onclick="window.location.href='revaluation.html'">
+  onclick="window.location.href='Revaluation.html'">
     Revaluation
   </button>
 
@@ -432,6 +600,7 @@ body{
   onclick="window.location.href='balance sheet.html'">
     Balance Sheet
   </button>
+  </div>
 
 </div>
 
@@ -447,7 +616,9 @@ body{
 
       <div class="box-head">
 
-        <div class="box-title">Question Image</div>
+        <div class="box-title">
+          Question Image
+        </div>
 
         <div class="box-sub">
           Upload image
@@ -465,7 +636,9 @@ body{
 
       </div>
 
-      <input type="file" id="fileInp" accept="image/*">
+      <input type="file"
+      id="fileInp"
+      accept="image/*">
 
       <div class="q-preview" id="preview">
         <img id="qImg">
@@ -479,27 +652,36 @@ body{
 
       <div class="box-head">
 
-        <div class="box-title">Working Space</div>
+        <div class="box-title">
+          Working Space
+        </div>
 
         <div class="box-sub">
-          Draw • Notes
+          Draw • Notes • Typing
         </div>
 
       </div>
 
       <div class="toolbar">
 
-        <button class="tool pencil" id="pencilBtn">
+        <button class="tool pencil"
+        id="pencilBtn">
           ✏ Pencil
         </button>
 
-        <button class="tool eraser" id="eraserBtn">
+        <button class="tool eraser"
+        id="eraserBtn">
           🧽 Eraser
         </button>
 
         <button class="tool note"
         onclick="addSticky(mainWrap)">
           📝 Add Note
+        </button>
+
+        <button class="tool type-btn"
+        onclick="addTypeBox(mainWrap)">
+          ⌨ Type
         </button>
 
         <button class="tool clear"
@@ -526,15 +708,17 @@ body{
 
       </div>
 
-      <div class="main-canvas-wrap" id="mainWrap">
+      <div class="main-canvas-wrap"
+      id="mainWrap">
+
         <canvas id="wsCanvas"></canvas>
+
       </div>
 
       <div class="notes-area">
 
-        <div class="notes-grid" id="notesGrid">
-
-        </div>
+        <div class="notes-grid"
+        id="notesGrid"></div>
 
       </div>
 
@@ -548,23 +732,26 @@ body{
 
 /* IMAGE */
 
-const fileInp = document.getElementById('fileInp');
+const fileInp=document.getElementById('fileInp');
 
 fileInp.addEventListener('change',function(e){
 
-  const file = e.target.files[0];
+  const file=e.target.files[0];
 
   if(!file) return;
 
-  const reader = new FileReader();
+  const reader=new FileReader();
 
-  reader.onload = function(ev){
+  reader.onload=function(ev){
 
-    document.querySelector('.upload-area').style.display='none';
+    document.querySelector('.upload-area')
+    .style.display='none';
 
-    document.getElementById('preview').style.display='block';
+    document.getElementById('preview')
+    .style.display='block';
 
-    document.getElementById('qImg').src = ev.target.result;
+    document.getElementById('qImg').src=
+    ev.target.result;
 
   }
 
@@ -574,10 +761,10 @@ fileInp.addEventListener('change',function(e){
 
 /* MAIN CANVAS */
 
-const canvas = document.getElementById('wsCanvas');
-const ctx = canvas.getContext('2d');
+const canvas=document.getElementById('wsCanvas');
+const ctx=canvas.getContext('2d');
 
-const mainWrap = document.getElementById('mainWrap');
+const mainWrap=document.getElementById('mainWrap');
 
 let drawing=false;
 let tool='pencil';
@@ -585,8 +772,8 @@ let size=2;
 
 function resizeCanvas(){
 
-  canvas.width = mainWrap.offsetWidth;
-  canvas.height = mainWrap.offsetHeight;
+  canvas.width=mainWrap.offsetWidth;
+  canvas.height=mainWrap.offsetHeight;
 
 }
 
@@ -596,7 +783,7 @@ window.addEventListener('resize',resizeCanvas);
 
 function getPos(e,target){
 
-  const rect = target.getBoundingClientRect();
+  const rect=target.getBoundingClientRect();
 
   return{
 
@@ -706,9 +893,13 @@ function createWorkingNote(){
 
     <div class="note-head">
 
-      <div class="note-num">${noteCount}</div>
+      <div class="note-num">
+        ${noteCount}
+      </div>
 
-      <h3>Working Note ${noteCount}</h3>
+      <h3>
+        Working Note ${noteCount}
+      </h3>
 
     </div>
 
@@ -726,12 +917,16 @@ function createWorkingNote(){
         Eraser
       </button>
 
-      <button class="small-btn red">
-        Clear
+      <button class="small-btn purple">
+        Type
       </button>
 
       <button class="small-btn gold">
         Note
+      </button>
+
+      <button class="small-btn red">
+        Clear
       </button>
 
     </div>
@@ -744,7 +939,7 @@ function createWorkingNote(){
 
 }
 
-/* NOTE CARD FUNCTION */
+/* NOTE CARD */
 
 function setupNoteCard(card){
 
@@ -832,6 +1027,7 @@ function setupNoteCard(card){
 
   const pencilBtn=card.querySelector('.black');
   const eraserBtn=card.querySelector('.gray');
+  const typeBtn=card.querySelector('.purple');
   const clearBtn=card.querySelector('.red');
   const noteBtn=card.querySelector('.gold');
 
@@ -859,9 +1055,15 @@ function setupNoteCard(card){
 
   };
 
+  typeBtn.onclick=()=>{
+
+    addTypeBox(body);
+
+  };
+
 }
 
-/* STICKY */
+/* ADD STICKY */
 
 function addSticky(parent){
 
@@ -874,9 +1076,13 @@ function addSticky(parent){
 
   note.innerHTML=`
 
-    <div class="sticky-top">
+    <div class="sticky-header">
 
-      <button class="sticky-clear">
+      <div class="sticky-title">
+        Sticky Note
+      </div>
+
+      <button class="remove-btn">
         ✕
       </button>
 
@@ -885,96 +1091,380 @@ function addSticky(parent){
     <textarea
     placeholder="Write here..."></textarea>
 
+    ${resizeHandles()}
+
   `;
 
   parent.appendChild(note);
 
-  const textarea=note.querySelector('textarea');
-
-  const clearBtn=note.querySelector('.sticky-clear');
-
-  clearBtn.onclick=()=>{
+  note.querySelector('.remove-btn').onclick=()=>{
 
     note.remove();
 
   };
 
-  textarea.addEventListener('mousedown',(e)=>{
+  makeDraggable(
+    note,
+    note.querySelector('.sticky-header')
+  );
 
-    e.stopPropagation();
+  makeResizable(note);
 
-  });
+}
 
-  textarea.addEventListener('touchstart',(e)=>{
+/* ADD TYPE BOX */
 
-    e.stopPropagation();
+function addTypeBox(parent){
 
-  });
+  const box=document.createElement('div');
 
-  dragElement(note);
+  box.className='type-box';
+
+  box.style.left='40px';
+  box.style.top='40px';
+
+  box.innerHTML=`
+
+    <div class="type-header">
+
+      <button class="remove-btn">
+        ✕
+      </button>
+
+    </div>
+
+    <div class="type-content"
+    contenteditable="true">
+      Type here...
+    </div>
+
+    ${resizeHandles()}
+
+  `;
+
+  parent.appendChild(box);
+
+  box.querySelector('.remove-btn').onclick=()=>{
+
+    box.remove();
+
+  };
+
+  makeDraggable(
+    box,
+    box.querySelector('.type-header')
+  );
+
+  makeResizable(box);
+
+}
+
+/* RESIZE HANDLES */
+
+function resizeHandles(){
+
+  return `
+
+    <div class="resize-handle br"></div>
+    <div class="resize-handle bl"></div>
+    <div class="resize-handle tr"></div>
+    <div class="resize-handle tl"></div>
+
+    <div class="resize-handle top"></div>
+    <div class="resize-handle bottom"></div>
+
+    <div class="resize-handle left"></div>
+    <div class="resize-handle right"></div>
+
+  `;
 
 }
 
 /* DRAG */
 
-function dragElement(el){
+function makeDraggable(element,handle){
 
-  let startX=0;
-  let startY=0;
-  let initialX=0;
-  let initialY=0;
+  let offsetX=0;
+  let offsetY=0;
+  let isDragging=false;
 
-  el.addEventListener('mousedown',dragStart);
-  el.addEventListener('touchstart',dragStart);
+  handle.addEventListener('mousedown',startDrag);
 
-  function dragStart(e){
+  function startDrag(e){
 
-    if(e.target.tagName==='TEXTAREA') return;
+    isDragging=true;
 
-    e.preventDefault();
+    offsetX=
+    e.clientX-element.offsetLeft;
 
-    initialX=
-    e.touches ? e.touches[0].clientX : e.clientX;
+    offsetY=
+    e.clientY-element.offsetTop;
 
-    initialY=
-    e.touches ? e.touches[0].clientY : e.clientY;
+    document.addEventListener(
+      'mousemove',
+      drag
+    );
 
-    document.addEventListener('mousemove',drag);
-    document.addEventListener('mouseup',dragEnd);
-
-    document.addEventListener('touchmove',drag);
-    document.addEventListener('touchend',dragEnd);
+    document.addEventListener(
+      'mouseup',
+      stopDrag
+    );
 
   }
 
   function drag(e){
 
-    e.preventDefault();
+    if(!isDragging) return;
 
-    startX=
-    (e.touches ? e.touches[0].clientX : e.clientX)-initialX;
+    element.style.left=
+    (e.clientX-offsetX)+'px';
 
-    startY=
-    (e.touches ? e.touches[0].clientY : e.clientY)-initialY;
-
-    initialX=
-    e.touches ? e.touches[0].clientX : e.clientX;
-
-    initialY=
-    e.touches ? e.touches[0].clientY : e.clientY;
-
-    el.style.top=(el.offsetTop+startY)+"px";
-    el.style.left=(el.offsetLeft+startX)+"px";
+    element.style.top=
+    (e.clientY-offsetY)+'px';
 
   }
 
-  function dragEnd(){
+  function stopDrag(){
 
-    document.removeEventListener('mousemove',drag);
-    document.removeEventListener('mouseup',dragEnd);
+    isDragging=false;
 
-    document.removeEventListener('touchmove',drag);
-    document.removeEventListener('touchend',dragEnd);
+    document.removeEventListener(
+      'mousemove',
+      drag
+    );
+
+    document.removeEventListener(
+      'mouseup',
+      stopDrag
+    );
+
+  }
+
+}
+
+/* RESIZE */
+
+function makeResizable(element){
+
+  const handles=
+  element.querySelectorAll('.resize-handle');
+
+  handles.forEach(handle=>{
+
+    handle.addEventListener(
+      'mousedown',
+      initResize
+    );
+
+  });
+
+  function initResize(e){
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const handle=e.target;
+
+    const startX=e.clientX;
+    const startY=e.clientY;
+
+    const startWidth=
+    parseInt(
+      getComputedStyle(element).width
+    );
+
+    const startHeight=
+    parseInt(
+      getComputedStyle(element).height
+    );
+
+    const startLeft=
+    element.offsetLeft;
+
+    const startTop=
+    element.offsetTop;
+
+    function resize(e){
+
+      /* RIGHT */
+
+      if(
+        handle.classList.contains('right')
+      ){
+
+        element.style.width=
+        startWidth+
+        (e.clientX-startX)+'px';
+
+      }
+
+      /* LEFT */
+
+      if(
+        handle.classList.contains('left')
+      ){
+
+        const width=
+        startWidth-
+        (e.clientX-startX);
+
+        element.style.width=
+        width+'px';
+
+        element.style.left=
+        startLeft+
+        (e.clientX-startX)+'px';
+
+      }
+
+      /* BOTTOM */
+
+      if(
+        handle.classList.contains('bottom')
+      ){
+
+        element.style.height=
+        startHeight+
+        (e.clientY-startY)+'px';
+
+      }
+
+      /* TOP */
+
+      if(
+        handle.classList.contains('top')
+      ){
+
+        const height=
+        startHeight-
+        (e.clientY-startY);
+
+        element.style.height=
+        height+'px';
+
+        element.style.top=
+        startTop+
+        (e.clientY-startY)+'px';
+
+      }
+
+      /* BR */
+
+      if(
+        handle.classList.contains('br')
+      ){
+
+        element.style.width=
+        startWidth+
+        (e.clientX-startX)+'px';
+
+        element.style.height=
+        startHeight+
+        (e.clientY-startY)+'px';
+
+      }
+
+      /* BL */
+
+      if(
+        handle.classList.contains('bl')
+      ){
+
+        const width=
+        startWidth-
+        (e.clientX-startX);
+
+        element.style.width=
+        width+'px';
+
+        element.style.left=
+        startLeft+
+        (e.clientX-startX)+'px';
+
+        element.style.height=
+        startHeight+
+        (e.clientY-startY)+'px';
+
+      }
+
+      /* TR */
+
+      if(
+        handle.classList.contains('tr')
+      ){
+
+        element.style.width=
+        startWidth+
+        (e.clientX-startX)+'px';
+
+        const height=
+        startHeight-
+        (e.clientY-startY);
+
+        element.style.height=
+        height+'px';
+
+        element.style.top=
+        startTop+
+        (e.clientY-startY)+'px';
+
+      }
+
+      /* TL */
+
+      if(
+        handle.classList.contains('tl')
+      ){
+
+        const width=
+        startWidth-
+        (e.clientX-startX);
+
+        element.style.width=
+        width+'px';
+
+        element.style.left=
+        startLeft+
+        (e.clientX-startX)+'px';
+
+        const height=
+        startHeight-
+        (e.clientY-startY);
+
+        element.style.height=
+        height+'px';
+
+        element.style.top=
+        startTop+
+        (e.clientY-startY)+'px';
+
+      }
+
+    }
+
+    function stopResize(){
+
+      document.removeEventListener(
+        'mousemove',
+        resize
+      );
+
+      document.removeEventListener(
+        'mouseup',
+        stopResize
+      );
+
+    }
+
+    document.addEventListener(
+      'mousemove',
+      resize
+    );
+
+    document.addEventListener(
+      'mouseup',
+      stopResize
+    );
 
   }
 
@@ -982,7 +1472,6 @@ function dragElement(el){
 
 /* DEFAULT NOTES */
 
-createWorkingNote();
 createWorkingNote();
 createWorkingNote();
 createWorkingNote();
