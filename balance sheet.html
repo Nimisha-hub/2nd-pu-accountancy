@@ -2,901 +2,303 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Balance Sheet</title>
-
 <style>
-    /* TOP NAV */
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
+.top-nav{ display:flex; gap:14px; margin-bottom:18px; }
+.page-btn{ padding:14px 24px; border:none; border-radius:16px; background:#111; color:white; font-size:16px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.main-layout{ display:grid; grid-template-columns:68% 32%; gap:20px; }
+.left-panel{ background:white; padding:24px; border-radius:28px; box-shadow:0 6px 20px rgba(0,0,0,0.08); position:relative; }
+.top-buttons{ display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.top-buttons button{ background:#111; color:white; border:none; padding:14px 20px; border-radius:16px; font-size:15px; cursor:pointer; transition:0.25s; font-weight:600; }
+.top-buttons button:hover{ transform:translateY(-3px); background:#333; }
+.tool-active{ background:#4d6fff !important; }
+.title{ text-align:center; font-size:40px; font-weight:700; margin-bottom:14px; }
 
-.top-nav{
-display:flex;
-justify-content:flex-end;
-margin-bottom:18px;
+/* Table */
+.table-wrapper{ position:relative; overflow:auto; border-radius:4px; }
+#drawLayer{ position:absolute; top:0; left:0; z-index:2; pointer-events:none; }
+.cap-table{ border-collapse:collapse; table-layout:fixed; background:white; border:2px solid #333; width:100%; }
+.cap-table th, .cap-table td{ border:none; padding:6px 10px; position:relative; min-width:80px; }
+
+/* Header */
+.cap-table thead tr th{ background:#fff; font-size:14px; font-weight:700; text-align:center; height:44px; border-bottom:2px solid #333; }
+.cap-table thead tr th:not(:last-child){ border-right:1px solid #aaa; }
+.cap-table thead tr th.mid-divider{ border-right:2px solid #333 !important; }
+.cap-table thead tr th.amt-th{ width:120px; }
+
+/* Body */
+.cap-table tbody tr td{ height:46px; vertical-align:middle; }
+.cap-table tbody tr td:not(:last-child){ border-right:1px solid #aaa; }
+.cap-table tbody tr td.mid-divider{ border-right:2px solid #333 !important; }
+
+/* Textarea */
+.cap-table textarea{
+  width:100%; height:100%; border:none; outline:none; font-size:14px;
+  background:transparent; padding:4px 6px; cursor:text; resize:none;
+  font-family:Arial,sans-serif; overflow:hidden; line-height:1.4; display:block;
 }
+.cap-table textarea:focus{ background:#fff8d8; border-radius:6px; }
 
-/* BACK BUTTON */
+/* Total row */
+.total-row td{ border-top:2px solid #333; font-weight:bold; font-size:14px; height:44px; vertical-align:middle; padding:0; }
+.total-row td:not(:last-child){ border-right:1px solid #aaa; }
+.total-row td.mid-divider{ border-right:2px solid #333 !important; }
+.total-row td.label-td{ padding:6px 10px; }
+.total-ta{ width:100%; height:100%; border:none; outline:none; font-size:14px; font-weight:bold; background:transparent; resize:none; font-family:Arial,sans-serif; cursor:text; padding:4px 6px; display:block; }
 
-.back-btn{
-padding:14px 24px;
-border:none;
-border-radius:16px;
-background:linear-gradient(135deg,#4d6fff,#7a5cff);
-color:white;
-font-size:16px;
-font-weight:600;
-cursor:pointer;
-transition:0.3s;
-box-shadow:0 6px 18px rgba(77,111,255,0.25);
-}
-
-.back-btn:hover{
-transform:translateY(-3px);
-box-shadow:0 10px 24px rgba(77,111,255,0.35);
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:#f4f6fb;
-padding:20px;
-min-height:100vh;
-overflow-x:hidden;
-}
-
-.main{
-display:grid;
-grid-template-columns:68% 32%;
-gap:20px;
-align-items:start;
-}
-
-.sheet-box{
-background:#fff;
-border-radius:24px;
-padding:24px;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
-position:relative;
-}
-
-.title{
-text-align:center;
-font-size:42px;
-font-weight:700;
-margin-bottom:20px;
-}
-
-.top-tools{
-display:flex;
-gap:12px;
-margin-bottom:20px;
-flex-wrap:wrap;
-}
-
-.top-tools button{
-background:#111;
-color:#fff;
-border:none;
-padding:14px 20px;
-border-radius:14px;
-cursor:pointer;
-font-size:15px;
-transition:0.25s;
-}
-
-.top-tools button:hover{
-transform:translateY(-2px);
-background:#333;
-}
-
-.active-tool{
-background:#4d6fff !important;
-}
-
-.table-wrapper{
-position:relative;
-overflow:visible;
-width:100%;
-}
-
-.balance-table{
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
-background:white;
-position:relative;
-z-index:2;
-}
-
-.balance-table th,
-.balance-table td{
-border:2px solid #333;
-padding:12px;
-height:72px;
-vertical-align:middle;
-transition:0.2s;
-position:relative;
-}
-
-.balance-table th{
-background:#eef2ff;
-font-size:22px;
-}
-
-.balance-table td:hover{
-background:#f8f9ff;
-}
-
-.balance-table input{
-width:100%;
-height:100%;
-border:none;
-outline:none;
-font-size:18px;
-background:transparent;
-padding:4px;
-}
-
-.typing-cell{
-cursor:text;
-}
-
-.typing-cell:focus-within{
-background:#eef3ff !important;
-}
-
-.dropzone.hover{
-background:#dfe9ff !important;
-}
-
-.amount-col{
-width:160px;
-}
-
-.total-box{
-font-weight:bold;
-font-size:20px;
-background:#fafafa;
-}
+/* Resize handles */
+.resize-handle{ position:absolute; right:-5px; top:0; width:10px; height:100%; cursor:col-resize; z-index:20; }
+.resize-row-handle{ position:absolute; bottom:-5px; left:0; width:100%; height:10px; cursor:row-resize; z-index:20; }
 
 /* RIGHT PANEL */
+.right-panel{ background:white; padding:24px; border-radius:28px; box-shadow:0 6px 20px rgba(0,0,0,0.08); display:flex; flex-direction:column; height:850px; overflow:hidden; }
+.cards-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.cards-header h2{ font-size:26px; }
+.card-input-area{ display:flex; gap:10px; margin-bottom:18px; }
+.card-input-area input{ flex:1; padding:12px; border-radius:16px; border:2px solid #ddd; font-size:14px; outline:none; transition:0.25s; }
+.card-input-area input:focus{ border-color:#4d6fff; box-shadow:0 0 0 4px rgba(77,111,255,0.12); }
+.card-input-area button{ background:#111; color:white; border:none; padding:12px 16px; border-radius:16px; font-size:14px; cursor:pointer; transition:0.25s; font-weight:bold; }
+.card-input-area button:hover{ background:#333; transform:translateY(-2px); }
+.cards-scroll{ flex:1; overflow-y:auto; padding-right:4px; }
+.cards-container{ display:flex; flex-wrap:wrap; gap:12px; align-content:flex-start; }
+.card{ width:140px; min-height:86px; background:white; border-radius:16px; padding:10px; box-shadow:0 4px 14px rgba(0,0,0,0.08); border-left:6px solid #4d6fff; position:relative; transition:0.25s; cursor:grab; user-select:none; }
+.card:hover{ transform:translateY(-5px) scale(1.03); box-shadow:0 10px 20px rgba(0,0,0,0.12); }
+.particular{ font-size:13px; font-weight:600; line-height:1.3; margin-bottom:4px; word-break:break-word; }
+.amount{ font-size:13px; font-weight:bold; }
+.card small{ position:absolute; right:8px; bottom:6px; color:#aaa; font-size:10px; }
 
-.cards-panel{
-background:#fff;
-border-radius:24px;
-padding:22px;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
-display:flex;
-flex-direction:column;
-}
-
-.cards-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:18px;
-}
-
-.cards-header h2{
-font-size:34px;
-}
-
-.generate-box{
-display:flex;
-gap:12px;
-margin-bottom:18px;
-}
-
-.generate-box input{
-flex:1;
-height:58px;
-border:2px solid #ddd;
-border-radius:18px;
-padding:0 16px;
-font-size:17px;
-}
-
-.generate-box button{
-width:130px;
-border:none;
-border-radius:18px;
-background:#111;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-.cards-scroll{
-display:flex;
-flex-wrap:wrap;
-gap:14px;
-align-content:flex-start;
-}
-
-.card{
-width:170px;
-min-height:100px;
-background:white;
-border-radius:20px;
-padding:14px;
-border-left:6px solid #4a74ff;
-box-shadow:0 4px 14px rgba(0,0,0,0.08);
-cursor:grab;
-transition:0.25s;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-}
-
-.card.cr{
-border-left-color:#22c55e;
-}
-
-.card:hover{
-transform:translateY(-4px);
-}
-
-.badge{
-display:inline-block;
-padding:5px 12px;
-border-radius:20px;
-background:#e9efff;
-color:#4a74ff;
-font-size:12px;
-font-weight:700;
-margin-bottom:10px;
-}
-
-.card.cr .badge{
-background:#e9fff0;
-color:#22c55e;
-}
-
-.card h4{
-font-size:18px;
-margin-bottom:6px;
-word-break:break-word;
-}
-
-.card p{
-font-size:20px;
-font-weight:bold;
-}
-
-.drag{
-margin-top:10px;
-text-align:right;
-color:#aaa;
-font-size:12px;
-}
-
-/* CANVAS */
-
-#drawCanvas{
-position:absolute;
-top:0;
-left:0;
-z-index:1000;
-pointer-events:none;
-}
-
-@media(max-width:1100px){
-
-.main{
-grid-template-columns:1fr;
-}
-
-}
-
+@media(max-width:1000px){ .main-layout{ grid-template-columns:1fr; } .right-panel{ height:auto; } .title{ font-size:28px; } }
 </style>
 </head>
-
 <body>
+
 <div class="top-nav">
-
-<button class="back-btn" onclick="goBack()">
-← Back
-</button>
-
-</div>
-<div class="main">
-
-<!-- LEFT -->
-
-<div class="sheet-box">
-
-<div class="top-tools">
-
-<button onclick="addRow()">
-+ Add Row
-</button>
-
-<button onclick="calculateTotal()">
-Calculate
-</button>
-
-<button onclick="enableTyping()">
-⌨ Typing
-</button>
-
-<button id="pencilBtn" onclick="setTool('pencil')">
-✏ Pencil
-</button>
-
-<button id="eraserBtn" onclick="setTool('eraser')">
-🧽 Eraser
-</button>
-
-<button onclick="clearCanvas()">
-🧹 Clear Drawing
-</button>
-
-<button onclick="clearTable()">
-❌ Clear Table
-</button>
-
+  <button class="page-btn">Balance Sheet</button>
+  <button class="page-btn" onclick="window.location.href='index.html'">&#8592; Back</button>
 </div>
 
-<div class="title">
-Balance Sheet
-</div>
+<div class="main-layout">
+  <div class="left-panel">
+    <div class="top-buttons">
+      <button onclick="addRow()">+ Add Row</button>
+      <button id="typingBtn" onclick="setTool('typing')">&#9000; Typing</button>
+      <button id="pencilBtn" onclick="setTool('pencil')">&#9998; Pencil</button>
+      <button id="eraserBtn" onclick="setTool('eraser')">&#129657; Eraser</button>
+      <button onclick="clearAll()">&#129529; Clear</button>
+    </div>
+    <div class="title">Balance Sheet</div>
+    <div class="table-wrapper" id="tableWrapper">
+      <canvas id="drawLayer"></canvas>
+      <table class="cap-table" id="capTable">
+        <thead>
+          <tr id="headerRow">
+            <th style="width:200px;">Liabilities<div class="resize-handle"></div></th>
+            <th class="amt-th mid-divider">Amount<div class="resize-handle"></div></th>
+            <th style="width:200px;">Assets<div class="resize-handle"></div></th>
+            <th class="amt-th">Amount<div class="resize-handle"></div></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td class="label-td">Total</td>
+            <td class="mid-divider"><textarea class="total-ta"></textarea></td>
+            <td class="label-td">Total</td>
+            <td><textarea class="total-ta"></textarea></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 
-<div class="table-wrapper" id="tableWrapper">
-
-<canvas id="drawCanvas"></canvas>
-
-<table class="balance-table">
-
-<tr>
-<th>Liabilities</th>
-<th class="amount-col">Amount</th>
-<th>Assets</th>
-<th class="amount-col">Amount</th>
-</tr>
-
-<tbody id="tableBody">
-
-<tr>
-
-<td class="dropzone typing-cell">
-<input placeholder="Type liabilities">
-</td>
-
-<td class="dropzone amount-col typing-cell">
-<input placeholder="Amount">
-</td>
-
-<td class="dropzone typing-cell">
-<input placeholder="Type assets">
-</td>
-
-<td class="dropzone amount-col typing-cell">
-<input placeholder="Amount">
-</td>
-
-</tr>
-
-<tr>
-<td class="dropzone typing-cell"><input></td>
-<td class="dropzone amount-col typing-cell"><input></td>
-<td class="dropzone typing-cell"><input></td>
-<td class="dropzone amount-col typing-cell"><input></td>
-</tr>
-
-<tr>
-<td class="dropzone typing-cell"><input></td>
-<td class="dropzone amount-col typing-cell"><input></td>
-<td class="dropzone typing-cell"><input></td>
-<td class="dropzone amount-col typing-cell"><input></td>
-</tr>
-
-</tbody>
-
-<tr>
-
-<td class="total-box">
-Total
-</td>
-
-<td class="total-box amount-col" id="leftTotal">
-0
-</td>
-
-<td class="total-box">
-Total
-</td>
-
-<td class="total-box amount-col" id="rightTotal">
-0
-</td>
-
-</tr>
-
-</table>
-
-</div>
-
-</div>
-
-<!-- RIGHT -->
-
-<div class="cards-panel">
-
-<div class="cards-header">
-
-<h2>Entry Cards</h2>
-
-<span>Drag → table</span>
-
-</div>
-
-<div class="generate-box">
-
-<input
-id="cardInput"
-placeholder="Example: Building 12000"
->
-
-<button onclick="generateCard()">
-Generate
-</button>
-
-</div>
-
-<div class="cards-scroll" id="cardsContainer">
-
-</div>
-
-</div>
-
+  <div class="right-panel">
+    <div class="cards-header">
+      <h2>Entry Cards</h2>
+      <p>Generate Entries</p>
+    </div>
+    <div class="card-input-area">
+      <input id="entryInput" placeholder="E.g. Building 50000"/>
+      <button onclick="generateCard()">Generate</button>
+    </div>
+    <div class="cards-scroll">
+      <div class="cards-container" id="cardsContainer"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-    function goBack(){
+var ROWS = 5;
+var cardCount = 0;
 
-window.location.href="index.html";
-
+function buildTable(){
+  buildBody();
+  setupDropZones();
+  setupResize();
+  resizeCanvas();
 }
 
-/* CARD GENERATE */
-
-function generateCard(){
-
-let text =
-document.getElementById("cardInput").value.trim();
-
-if(text==="") return;
-
-let amountMatch =
-text.match(/\d[\d,]*/);
-
-let amount =
-amountMatch ? amountMatch[0] : "";
-
-let particulars =
-text.replace(amount,"").trim();
-
-let type =
-particulars.toLowerCase().includes("to")
-? "DR"
-: "CR";
-
-let card =
-document.createElement("div");
-
-card.className =
-type==="DR"
-? "card"
-: "card cr";
-
-card.draggable = true;
-
-let id = "card"+Date.now();
-
-card.id = id;
-
-card.dataset.particular = particulars;
-card.dataset.amount = amount;
-
-card.addEventListener("dragstart",drag);
-
-card.innerHTML = `
-
-<div class="badge">${type}</div>
-
-<h4>${particulars}</h4>
-
-<p>Amount: ${amount}</p>
-
-<div class="drag">drag</div>
-
-`;
-
-document.getElementById("cardsContainer")
-.appendChild(card);
-
-document.getElementById("cardInput").value="";
-
+function buildBody(){
+  var tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+  for(var r = 0; r < ROWS; r++) addBodyRow(tbody);
 }
 
-/* ENTER */
-
-document.getElementById("cardInput")
-.addEventListener("keypress",function(e){
-
-if(e.key==="Enter"){
-generateCard();
+function makeCell(isMid){
+  var td = document.createElement("td");
+  td.className = "drop-cell";
+  if(isMid) td.classList.add("mid-divider");
+  td.innerHTML = "<textarea rows='1'></textarea><div class='resize-row-handle'></div>";
+  return td;
 }
 
-});
-
-/* DRAG */
-
-function drag(ev){
-
-ev.dataTransfer.setData(
-"text",
-ev.target.id
-);
-
+function addBodyRow(tbody){
+  var tr = document.createElement("tr");
+  tr.appendChild(makeCell(false));
+  tr.appendChild(makeCell(true));
+  tr.appendChild(makeCell(false));
+  tr.appendChild(makeCell(false));
+  tbody.appendChild(tr);
 }
-
-/* ENABLE DROP */
-
-function enableDropZone(cell){
-
-cell.addEventListener("dragover",function(ev){
-
-ev.preventDefault();
-cell.classList.add("hover");
-
-});
-
-cell.addEventListener("dragleave",function(){
-
-cell.classList.remove("hover");
-
-});
-
-cell.addEventListener("drop",function(ev){
-
-ev.preventDefault();
-
-cell.classList.remove("hover");
-
-let data =
-ev.dataTransfer.getData("text");
-
-let card =
-document.getElementById(data);
-
-if(!card) return;
-
-let particulars =
-card.dataset.particular;
-
-let amount =
-card.dataset.amount;
-
-let row =
-cell.parentElement;
-
-let cells =
-row.querySelectorAll("td");
-
-let index =
-[...cells].indexOf(cell);
-
-if(index===0 || index===2){
-
-cells[index]
-.querySelector("input")
-.value = particulars;
-
-cells[index+1]
-.querySelector("input")
-.value = amount;
-
-}
-
-card.remove();
-
-});
-
-}
-
-/* ENABLE CELLS */
-
-document.querySelectorAll(".dropzone")
-.forEach(enableDropZone);
-
-/* CLICK ANYWHERE TO TYPE */
-
-document.querySelectorAll(".typing-cell")
-.forEach(enableTypingClick);
-
-function enableTypingClick(cell){
-
-cell.addEventListener("click",function(){
-
-let input = cell.querySelector("input");
-
-if(input){
-input.focus();
-}
-
-});
-
-}
-
-/* ADD ROW */
 
 function addRow(){
-
-let row =
-document.createElement("tr");
-
-row.innerHTML = `
-
-<td class="dropzone typing-cell">
-<input>
-</td>
-
-<td class="dropzone amount-col typing-cell">
-<input>
-</td>
-
-<td class="dropzone typing-cell">
-<input>
-</td>
-
-<td class="dropzone amount-col typing-cell">
-<input>
-</td>
-
-`;
-
-document.getElementById("tableBody")
-.appendChild(row);
-
-row.querySelectorAll(".dropzone")
-.forEach(enableDropZone);
-
-row.querySelectorAll(".typing-cell")
-.forEach(enableTypingClick);
-
-resizeCanvas();
-
+  addBodyRow(document.getElementById("tableBody"));
+  setupDropZones();
+  setupResize();
+  resizeCanvas();
 }
 
-/* CALCULATE */
-
-function calculateTotal(){
-
-let rows =
-document.querySelectorAll("#tableBody tr");
-
-let left = 0;
-let right = 0;
-
-rows.forEach(r=>{
-
-let inputs =
-r.querySelectorAll("input");
-
-left +=
-parseFloat(
-inputs[1].value.replace(/,/g,'')
-) || 0;
-
-right +=
-parseFloat(
-inputs[3].value.replace(/,/g,'')
-) || 0;
-
-});
-
-document.getElementById("leftTotal")
-.innerText = left;
-
-document.getElementById("rightTotal")
-.innerText = right;
-
+function setupDropZones(){
+  document.querySelectorAll(".drop-cell").forEach(function(cell){
+    cell.addEventListener("dragover", function(e){ e.preventDefault(); });
+    cell.addEventListener("drop", function(e){
+      e.preventDefault();
+      var card = document.getElementById(e.dataTransfer.getData("text/plain"));
+      if(!card) return;
+      var ta = cell.querySelector("textarea");
+      if(!ta) return;
+      var allCells = Array.from(cell.parentElement.querySelectorAll("td"));
+      var idx = allCells.indexOf(cell);
+      if(idx === 0 || idx === 2){
+        ta.value = card.dataset.particulars;
+        var amtCell = allCells[idx + 1];
+        if(amtCell) amtCell.querySelector("textarea").value = card.dataset.amount;
+      } else {
+        ta.value = card.dataset.amount;
+      }
+      card.remove();
+    });
+  });
 }
 
-/* CLEAR TABLE */
-
-function clearTable(){
-
-document.querySelectorAll(
-".balance-table input"
-).forEach(input=>{
-
-input.value = "";
-
-});
-
-document.getElementById("leftTotal")
-.innerText = "0";
-
-document.getElementById("rightTotal")
-.innerText = "0";
-
-document.getElementById("cardsContainer")
-.innerHTML = "";
-
+function setupResize(){
+  document.querySelectorAll(".resize-handle").forEach(function(handle){
+    handle.onmousedown = function(e){
+      e.preventDefault(); e.stopPropagation();
+      var th = handle.parentElement;
+      var startX = e.pageX, startW = th.offsetWidth;
+      function onMove(e){ var w = Math.max(60, startW + (e.pageX - startX)); th.style.width = w+"px"; th.style.minWidth = w+"px"; resizeCanvas(); }
+      function onUp(){ document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); }
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    };
+  });
+  document.querySelectorAll(".resize-row-handle").forEach(function(handle){
+    handle.onmousedown = function(e){
+      e.preventDefault(); e.stopPropagation();
+      var tr = handle.parentElement.parentElement;
+      var tds = tr.querySelectorAll("td");
+      var startY = e.pageY, startH = tr.getBoundingClientRect().height;
+      function onMove(e){ var h = Math.max(36, startH + (e.pageY - startY)); tds.forEach(function(td){ td.style.height = h+"px"; }); }
+      function onUp(){ document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); resizeCanvas(); }
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    };
+  });
 }
 
-/* TYPING ALWAYS ENABLED */
-
-function enableTyping(){
-
-document.querySelectorAll(
-".balance-table input"
-).forEach(input=>{
-
-input.disabled = false;
-
-});
-
-canvas.style.pointerEvents = "none";
-
-alert("Typing Enabled");
-
-}
-
-/* DRAWING */
-
-const canvas =
-document.getElementById("drawCanvas");
-
-const wrapper =
-document.getElementById("tableWrapper");
-
-const ctx =
-canvas.getContext("2d");
+/* ── CANVAS ── */
+var canvas = document.getElementById("drawLayer");
+var wrapper = document.getElementById("tableWrapper");
+var ctx = canvas.getContext("2d");
 
 function resizeCanvas(){
-
-canvas.width =
-wrapper.scrollWidth;
-
-canvas.height =
-wrapper.scrollHeight;
-
+  var imgData = null;
+  if(canvas.width > 0 && canvas.height > 0){ try{ imgData = ctx.getImageData(0,0,canvas.width,canvas.height); }catch(e){} }
+  canvas.width = wrapper.scrollWidth;
+  canvas.height = wrapper.scrollHeight;
+  if(imgData) try{ ctx.putImageData(imgData,0,0); }catch(e){}
 }
-
 resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-window.addEventListener(
-"resize",
-resizeCanvas
-);
+var drawing = false;
+var tool = "typing";
 
-let drawing = false;
-let tool = "pencil";
+function setTool(t){
+  tool = t;
+  ["typingBtn","pencilBtn","eraserBtn"].forEach(function(id){ document.getElementById(id).classList.remove("tool-active"); });
+  if(t === "typing"){
+    canvas.style.pointerEvents = "none"; canvas.style.zIndex = "0";
+    document.getElementById("typingBtn").classList.add("tool-active");
+  } else if(t === "pencil"){
+    canvas.style.pointerEvents = "auto"; canvas.style.zIndex = "99"; canvas.style.cursor = "crosshair";
+    document.getElementById("pencilBtn").classList.add("tool-active");
+  } else {
+    canvas.style.pointerEvents = "auto"; canvas.style.zIndex = "99"; canvas.style.cursor = "cell";
+    document.getElementById("eraserBtn").classList.add("tool-active");
+  }
+}
+setTool("typing");
 
-function setTool(selectedTool){
+function getBelow(e){ canvas.style.pointerEvents="none"; var el=document.elementFromPoint(e.clientX,e.clientY); canvas.style.pointerEvents=tool==="typing"?"none":"auto"; return el; }
+canvas.addEventListener("dragover",function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent("dragover",{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
+canvas.addEventListener("drop",function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent("drop",{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
 
-tool = selectedTool;
+canvas.addEventListener("mousedown",function(e){ if(tool==="typing") return; drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY); });
+window.addEventListener("mousemove",function(e){
+  if(!drawing) return;
+  var r = canvas.getBoundingClientRect();
+  ctx.lineCap="round"; ctx.lineJoin="round";
+  if(tool==="eraser"){ ctx.globalCompositeOperation="destination-out"; ctx.lineWidth=30; }
+  else { ctx.globalCompositeOperation="source-over"; ctx.strokeStyle="#111"; ctx.lineWidth=2.5; }
+  ctx.lineTo(e.clientX-r.left, e.clientY-r.top); ctx.stroke();
+});
+window.addEventListener("mouseup",function(){ if(!drawing) return; drawing=false; ctx.beginPath(); });
 
-canvas.style.pointerEvents = "auto";
+/* ── GENERATE CARD ── */
+function generateCard(){
+  var input = document.getElementById("entryInput");
+  if(!input.value.trim()) return;
+  var text = input.value.trim();
+  var amountMatch = text.match(/\d+/g);
+  var amount = amountMatch ? amountMatch.join("") : "";
+  var particulars = text.replace(/[0-9\u20B9,]/g,"").trim();
 
-document.getElementById("pencilBtn")
-.classList.remove("active-tool");
+  var card = document.createElement("div");
+  cardCount++;
+  card.id = "card" + cardCount;
+  card.draggable = true;
+  card.dataset.particulars = particulars;
+  card.dataset.amount = amount;
+  card.className = "card";
+  card.innerHTML = '<div class="particular">' + particulars + '</div><div class="amount">&#8377;' + amount + '</div><small>Drag Me</small>';
+  card.addEventListener("dragstart", function(e){ e.dataTransfer.setData("text/plain", card.id); });
+  document.getElementById("cardsContainer").appendChild(card);
+  input.value = "";
+}
+document.getElementById("entryInput").addEventListener("keypress", function(e){ if(e.key==="Enter") generateCard(); });
 
-document.getElementById("eraserBtn")
-.classList.remove("active-tool");
-
-if(tool==="pencil"){
-
-document.getElementById("pencilBtn")
-.classList.add("active-tool");
-
-}else{
-
-document.getElementById("eraserBtn")
-.classList.add("active-tool");
-
+/* ── CLEAR ── */
+function clearAll(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  document.querySelectorAll(".cap-table textarea").forEach(function(t){ t.value=""; });
+  document.getElementById("cardsContainer").innerHTML="";
 }
 
-}
-
-/* START DRAW */
-
-canvas.addEventListener(
-"mousedown",
-function(e){
-
-drawing = true;
-
-ctx.beginPath();
-
-ctx.moveTo(
-e.offsetX,
-e.offsetY
-);
-
-}
-);
-
-/* DRAW */
-
-canvas.addEventListener(
-"mousemove",
-function(e){
-
-if(!drawing) return;
-
-ctx.lineCap = "round";
-
-if(tool==="eraser"){
-
-ctx.globalCompositeOperation =
-"destination-out";
-
-ctx.lineWidth = 30;
-
-}else{
-
-ctx.globalCompositeOperation =
-"source-over";
-
-ctx.strokeStyle = "#111";
-
-ctx.lineWidth = 4;
-
-}
-
-ctx.lineTo(
-e.offsetX,
-e.offsetY
-);
-
-ctx.stroke();
-
-}
-);
-
-/* STOP */
-
-canvas.addEventListener(
-"mouseup",
-function(){
-
-drawing = false;
-
-}
-);
-
-canvas.addEventListener(
-"mouseleave",
-function(){
-
-drawing = false;
-
-}
-);
-
-/* CLEAR DRAWING */
-
-function clearCanvas(){
-
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-}
-
+buildTable();
 </script>
-
 </body>
 </html>
