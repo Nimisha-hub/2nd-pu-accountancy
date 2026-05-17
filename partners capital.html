@@ -3,1009 +3,415 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Partner's Capital A/c</title>
-
 <style>
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
+.top-nav{ display:flex; gap:14px; margin-bottom:18px; }
+.page-btn{ padding:14px 24px; border:none; border-radius:16px; background:#111; color:white; font-size:16px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.main-layout{ display:grid; grid-template-columns:68% 32%; gap:20px; }
+.left-panel{ background:white; padding:24px; border-radius:28px; box-shadow:0 6px 20px rgba(0,0,0,0.08); position:relative; }
+.top-buttons{ display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.top-buttons button{ background:#111; color:white; border:none; padding:14px 20px; border-radius:16px; font-size:15px; cursor:pointer; transition:0.25s; font-weight:600; }
+.top-buttons button:hover{ transform:translateY(-3px); background:#333; }
+.tool-active{ background:#4d6fff !important; }
+.title{ text-align:center; font-size:40px; font-weight:700; margin-bottom:14px; }
+.dr-cr-bar{ display:flex; justify-content:space-between; padding:2px 4px 4px 4px; }
+.dr-label, .cr-label{ font-size:16px; font-weight:700; }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+/* Table */
+.table-wrapper{ position:relative; overflow:auto; border-radius:4px; }
+#drawLayer{ position:absolute; top:0; left:0; z-index:2; pointer-events:none; }
+.cap-table{ border-collapse:collapse; table-layout:fixed; background:white; border:2px solid #333; width:100%; }
+.cap-table th, .cap-table td{ border:none; padding:6px 10px; position:relative; min-width:80px; }
+
+/* Partner name header row */
+.partner-header th{ background:#fff; font-size:14px; font-weight:700; text-align:center; height:44px; border-bottom:2px solid #333; }
+.partner-header th:not(:last-child){ border-right:1px solid #aaa; }
+.partner-header th.mid-divider{ border-right:2px solid #333; }
+
+/* Editable partner name input + pencil */
+.th-name-wrap{ display:flex; align-items:center; justify-content:center; gap:4px; width:100%; }
+.partner-header th input{
+  width:calc(100% - 22px); border:none; outline:none; font-size:14px; font-weight:700;
+  text-align:center; background:transparent; cursor:text;
 }
-
-body{
-background:#f4f6fb;
-padding:20px;
-overflow-x:hidden;
+.partner-header th input:focus{ background:#fff8d8; border-radius:5px; }
+.pencil-btn{
+  background:none; border:none; cursor:pointer; font-size:13px; color:#aaa;
+  padding:2px 3px; line-height:1; flex-shrink:0; transition:0.15s;
 }
+.pencil-btn:hover{ color:#4d6fff; }
 
-/* MAIN */
+/* Particulars header (non-editable) */
+.partner-header th.part-th{ font-size:14px; font-weight:700; }
 
-.main-layout{
-display:grid;
-grid-template-columns:80% 20%;
-gap:20px;
-align-items:start;
+/* Body */
+.cap-table tbody tr td{ height:46px; vertical-align:middle; }
+.cap-table tbody tr td:not(:last-child){ border-right:1px solid #aaa; }
+.cap-table tbody tr td.mid-divider{ border-right:2px solid #333 !important; }
+
+/* Textarea in cells */
+.cap-table textarea{
+  width:100%; height:100%; border:none; outline:none; font-size:14px;
+  background:transparent; padding:4px 6px; cursor:text; resize:none;
+  font-family:Arial,sans-serif; overflow:hidden; line-height:1.4; display:block;
 }
+.cap-table textarea:focus{ background:#fff8d8; border-radius:6px; }
 
-/* LEFT */
+/* Resize handles */
+.resize-handle{ position:absolute; right:-5px; top:0; width:10px; height:100%; cursor:col-resize; z-index:20; }
+.resize-row-handle{ position:absolute; bottom:-5px; left:0; width:100%; height:10px; cursor:row-resize; z-index:20; }
 
-.left-section{
-background:white;
-padding:24px;
-border-radius:26px;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
-position:relative;
-overflow:hidden;
-}
-
-/* TOOLBAR */
-
-.toolbar{
-display:flex;
-gap:12px;
-margin-bottom:24px;
-flex-wrap:wrap;
-}
-
-.toolbar button{
-background:#111;
-color:white;
-border:none;
-border-radius:14px;
-padding:14px 22px;
-font-size:15px;
-cursor:pointer;
-font-weight:600;
-transition:0.25s;
-}
-
-.toolbar button:hover{
-background:#333;
-transform:translateY(-2px);
-}
-
-.active-tool{
-background:#4d6fff !important;
-}
-
-/* TITLE */
-
-.title{
-text-align:center;
-font-size:58px;
-font-weight:bold;
-margin-bottom:26px;
-}
-
-/* TABLE */
-
-.table-wrapper{
-width:100%;
-overflow:hidden;
-border-radius:20px;
-border:2px solid #dfe5ff;
-position:relative;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-table-layout:fixed;
-background:white;
-}
-
-/* CELLS */
-
-th,td{
-border:2px solid #444;
-height:88px;
-padding:10px;
-font-size:17px;
-vertical-align:middle;
-word-break:break-word;
-position:relative;
-}
-
-th{
-background:#eef2ff;
-font-weight:bold;
-}
-
-td:hover{
-background:#f8f9ff;
-}
-
-/* WIDTHS */
-
-.particular-col{
-width:320px;
-min-width:320px;
-}
-
-.amount-col{
-width:160px;
-min-width:160px;
-}
-
-/* RESIZE HANDLE */
-
-.resize-handle{
-position:absolute;
-top:0;
-right:-5px;
-width:10px;
-height:100%;
-cursor:col-resize;
-z-index:100;
-}
-
-/* INPUT */
-
-input{
-width:100%;
-border:none;
-outline:none;
-background:transparent;
-font-size:17px;
-font-weight:bold;
-text-align:center;
-}
-
-/* DROP CELL */
-
-.drop-cell{
-cursor:text;
-}
-
-.drop-cell.hover{
-background:#dfe9ff;
-}
-
-/* RIGHT */
-
-.right-section{
-background:white;
-padding:20px;
-border-radius:26px;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
-min-height:500px;
-overflow:hidden;
-}
-
-/* ENTRY */
-
-.cards-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:18px;
-}
-
-.cards-title{
-font-size:28px;
-font-weight:bold;
-}
-
-.cards-sub{
-font-size:12px;
-color:#666;
-}
-
-/* INPUT AREA */
-
-.input-area{
-display:flex;
-gap:8px;
-margin-bottom:18px;
-align-items:center;
-}
-
-/* PLACEHOLDER SMALL */
-
-.input-area input{
-flex:1;
-height:44px;
-border:2px solid #ddd;
-border-radius:14px;
-padding:0 12px;
-font-size:12px;
-text-align:left;
-font-weight:normal;
-min-width:0;
-}
-
-.input-area input::placeholder{
-font-size:11px;
-color:#777;
-}
-
-.input-area input:focus{
-border-color:#4d6fff;
-}
-
-/* SMALL BUTTON */
-
-.generate-btn{
-background:#111;
-color:white;
-border:none;
-border-radius:12px;
-padding:0 12px;
-height:44px;
-cursor:pointer;
-font-size:12px;
-font-weight:600;
-transition:0.25s;
-white-space:nowrap;
-min-width:90px;
-}
-
-.generate-btn:hover{
-background:#333;
-}
-
-/* CARDS */
-
-.cards-container{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-align-content:flex-start;
-}
-
-/* CARD */
-
-.card{
-width:115px;
-min-height:76px;
-background:white;
-border-radius:16px;
-padding:10px;
-cursor:grab;
-user-select:none;
-box-shadow:0 4px 14px rgba(0,0,0,0.08);
-border-left:5px solid #4d6fff;
-transition:0.25s;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-}
-
-.card:hover{
-transform:translateY(-3px);
-}
-
-.card.cr{
-border-left:5px solid #18b97a;
-}
-
-.badge{
-width:38px;
-height:20px;
-border-radius:999px;
-background:#e9efff;
-color:#4d6fff;
-font-size:10px;
-font-weight:bold;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.card.cr .badge{
-background:#dff7ed;
-color:#18b97a;
-}
-
-.card-name{
-font-size:12px;
-font-weight:bold;
-margin-top:6px;
-}
-
-.card-amount{
-font-size:12px;
-font-weight:bold;
-margin-top:4px;
-}
-
-.drag{
-font-size:10px;
-text-align:right;
-margin-top:6px;
-color:#888;
-}
-
-/* CANVAS */
-
-#drawCanvas{
-position:absolute;
-top:0;
-left:0;
-z-index:999;
-pointer-events:none;
-}
-
-/* MOBILE */
-
-@media(max-width:1100px){
-
-.main-layout{
-grid-template-columns:1fr;
-}
-
-.title{
-font-size:42px;
-}
-
-}
-
-/* BACK BUTTON */
-
-.back-btn{
-background:linear-gradient(135deg,#4d6fff,#7a5cff) !important;
-color:white;
-border:none;
-border-radius:14px;
-padding:14px 22px;
-font-size:15px;
-font-weight:600;
-cursor:pointer;
-transition:0.3s;
-box-shadow:0 6px 18px rgba(77,111,255,0.25);
-}
-
-.back-btn:hover{
-transform:translateY(-3px);
-box-shadow:0 10px 24px rgba(77,111,255,0.35);
-}
+/* RIGHT PANEL */
+.right-panel{ background:white; padding:24px; border-radius:28px; box-shadow:0 6px 20px rgba(0,0,0,0.08); display:flex; flex-direction:column; height:850px; overflow:hidden; }
+.cards-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.cards-header h2{ font-size:26px; }
+.card-input-area{ display:flex; gap:10px; margin-bottom:18px; }
+.card-input-area input{ flex:1; padding:12px; border-radius:16px; border:2px solid #ddd; font-size:14px; outline:none; transition:0.25s; }
+.card-input-area input:focus{ border-color:#4d6fff; box-shadow:0 0 0 4px rgba(77,111,255,0.12); }
+.card-input-area button{ background:#111; color:white; border:none; padding:12px 16px; border-radius:16px; font-size:14px; cursor:pointer; transition:0.25s; font-weight:bold; }
+.card-input-area button:hover{ background:#333; transform:translateY(-2px); }
+.cards-scroll{ flex:1; overflow-y:auto; padding-right:4px; }
+.cards-container{ display:flex; flex-wrap:wrap; gap:12px; align-content:flex-start; }
+.card{ width:140px; min-height:86px; background:white; border-radius:16px; padding:10px; box-shadow:0 4px 14px rgba(0,0,0,0.08); border-left:6px solid #4d6fff; position:relative; transition:0.25s; cursor:grab; user-select:none; }
+.card.cr{ border-left:6px solid #1db56c; }
+.card:hover{ transform:translateY(-5px) scale(1.03); box-shadow:0 10px 20px rgba(0,0,0,0.12); }
+.tag{ display:inline-block; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold; margin-bottom:6px; background:#e7edff; color:#4d6fff; }
+.card.cr .tag{ background:#dff7ea; color:#1db56c; }
+.particular{ font-size:13px; font-weight:600; line-height:1.3; margin-bottom:4px; word-break:break-word; }
+.amount{ font-size:13px; font-weight:bold; }
+.card small{ position:absolute; right:8px; bottom:6px; color:#aaa; font-size:10px; }
+@media(max-width:1000px){ .main-layout{ grid-template-columns:1fr; } .right-panel{ height:auto; } .title{ font-size:28px; } }
 </style>
 </head>
-
 <body>
-    
 
 <div class="top-nav">
-
-
-<!-- 
-<button class="page-btn bank-btn" onclick="goBack()">
-← Back
-</button> -->
-
+  <button class="page-btn">Partner's Capital A/c</button>
+  <button class="page-btn" onclick="window.location.href='index.html'">&#8592; Back</button>
 </div>
+
 <div class="main-layout">
+  <div class="left-panel">
+    <div class="top-buttons">
+      <button onclick="addRow()">+ Add Row</button>
+      <button onclick="addPartner()">+ Add Partner</button>
+      <button id="typingBtn" onclick="setTool('typing')">&#9000; Typing</button>
+      <button id="pencilBtn" onclick="setTool('pencil')">&#9998; Pencil</button>
+      <button id="eraserBtn" onclick="setTool('eraser')">&#129657; Eraser</button>
+      <button onclick="clearAll()">&#129529; Clear</button>
+    </div>
+    <div class="title">Partner's Capital A/c</div>
+    <div class="dr-cr-bar">
+      <span class="dr-label">Dr.</span>
+      <span class="cr-label">Cr.</span>
+    </div>
+    <div class="table-wrapper" id="tableWrapper">
+      <canvas id="drawLayer"></canvas>
+      <table class="cap-table" id="capTable">
+        <thead>
+          <tr class="partner-header" id="partnerHeader"></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
 
-<!-- LEFT -->
-
-<div class="left-section">
-
-<div class="toolbar">
-    <button class="back-btn" onclick="goBack()">
-← Back
-</button>
-
-<button onclick="addRow()">
-+ Add Row
-</button>
-
-<button onclick="addPartner()">
-+ Add Partner
-</button>
-
-<button id="pencilBtn" onclick="enablePencil()">
-✏ Pencil
-</button>
-
-<button id="typingBtn" onclick="enableTyping()">
-⌨ Typing
-</button>
-
-<button id="eraserBtn" onclick="enableEraser()">
-🧽 Eraser
-</button>
-
-<button onclick="clearCanvas()">
-🧹 Clear
-</button>
-
-</div>
-
-<div class="title">
-Partner's Capital A/c
-</div>
-
-<div class="table-wrapper" id="tableWrapper">
-
-<canvas id="drawCanvas"></canvas>
-
-<table id="mainTable">
-
-<thead>
-
-<tr>
-<th colspan="4">Dr.</th>
-<th colspan="4">Cr.</th>
-</tr>
-
-<tr id="partnerHeader">
-
-<th class="particular-col">
-Particulars
-<div class="resize-handle"></div>
-</th>
-
-<th class="amount-col">
-<input value="Akshaya">
-<div class="resize-handle"></div>
-</th>
-
-<th class="amount-col">
-<input value="Abhishek">
-<div class="resize-handle"></div>
-</th>
-
-<th class="amount-col">
-<input value="Abhijeet">
-<div class="resize-handle"></div>
-</th>
-
-<th class="particular-col">
-Particulars
-<div class="resize-handle"></div>
-</th>
-
-<th class="amount-col">
-<input value="Akshaya">
-<div class="resize-handle"></div>
-</th>
-
-<th class="amount-col">
-<input value="Abhishek">
-<div class="resize-handle"></div>
-</th>
-
-<th class="amount-col">
-<input value="Abhijeet">
-<div class="resize-handle"></div>
-</th>
-
-</tr>
-
-</thead>
-
-<tbody id="bodyRows">
-
-<tr>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-</tr>
-
-<tr>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-</tr>
-
-<tr>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-</tr>
-
-<tr>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-<td class="drop-cell" contenteditable="true"></td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-<!-- RIGHT -->
-
-<div class="right-section">
-
-<div class="cards-top">
-
-<div class="cards-title">
-Entry Cards
-</div>
-
-<div class="cards-sub">
-Drag → Table
-</div>
-
-</div>
-
-<div class="input-area">
-
-<input
-type="text"
-id="cardInput"
-placeholder="By Building 12000"
->
-
-<button class="generate-btn" onclick="generateCard()">
-Generate
-</button>
-
-</div>
-
-<div class="cards-container" id="cardsContainer"></div>
-
-</div>
-
+  <div class="right-panel">
+    <div class="cards-header">
+      <h2>Entry Cards</h2>
+      <p>Generate Entries</p>
+    </div>
+    <div class="card-input-area">
+      <input id="entryInput" placeholder="E.g. To Balance b/d 50000"/>
+      <button onclick="generateCard()">Generate</button>
+    </div>
+    <div class="cards-scroll">
+      <div class="cards-container" id="cardsContainer"></div>
+    </div>
+  </div>
 </div>
 
 <script>
 
-/* CARD */
+/* ── STATE ── */
+var partners = ["Partner A", "Partner B", "Partner C"];
+var ROWS = 5;
 
-let currentDraggedCard = null;
-
-function generateCard(){
-
-const value =
-document.getElementById('cardInput').value.trim();
-
-if(!value) return;
-
-let type = "DR";
-
-if(value.toLowerCase().includes("by")){
-type = "CR";
+/* ── BUILD TABLE ── */
+function buildTable(){
+  buildHeader();
+  buildBody();
+  setupDropZones();
+  setupResize();
+  resizeCanvas();
 }
 
-const amountMatch =
-value.match(/(\d[\d,]*)/);
+/* ── HEADER ── */
+function buildHeader(){
+  var hdr = document.getElementById("partnerHeader");
+  hdr.innerHTML = "";
 
-let amount = "";
+  // Particulars (Dr)
+  var th0 = document.createElement("th");
+  th0.className = "part-th";
+  th0.style.width = "160px";
+  th0.innerHTML = "Particulars<div class='resize-handle'></div>";
+  hdr.appendChild(th0);
 
-if(amountMatch){
-amount = amountMatch[0];
+  // Partner cols (Dr side)
+  partners.forEach(function(p, i){
+    var th = document.createElement("th");
+    if(i === partners.length - 1) th.classList.add("mid-divider");
+    th.style.width = "100px";
+    th.appendChild(makePartnerThContent(p, i));
+    var rh = document.createElement("div");
+    rh.className = "resize-handle";
+    th.appendChild(rh);
+    hdr.appendChild(th);
+  });
+
+  // Particulars (Cr)
+  var th1 = document.createElement("th");
+  th1.className = "part-th";
+  th1.style.width = "160px";
+  th1.innerHTML = "Particulars<div class='resize-handle'></div>";
+  hdr.appendChild(th1);
+
+  // Partner cols (Cr side)
+  partners.forEach(function(p, i){
+    var th = document.createElement("th");
+    th.style.width = "100px";
+    th.appendChild(makePartnerThContent(p, i));
+    var rh = document.createElement("div");
+    rh.className = "resize-handle";
+    th.appendChild(rh);
+    hdr.appendChild(th);
+  });
+
+  setupResize();
 }
 
-const name =
-value.replace(/₹?[\d,]+/g,'').trim();
+function makePartnerThContent(name, pIdx){
+  var wrap = document.createElement("div");
+  wrap.className = "th-name-wrap";
 
-const card =
-document.createElement('div');
+  var inp = document.createElement("input");
+  inp.value = name;
+  inp.title = "Click to edit partner name";
 
-card.className =
-type === "CR"
-? "card cr"
-: "card";
+  inp.addEventListener("change", function(){
+    partners[pIdx] = this.value.trim() || partners[pIdx];
+    this.value = partners[pIdx];
+    syncPartnerInputs(pIdx);
+  });
+  inp.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ this.blur(); }
+  });
 
-card.draggable = true;
+  var btn = document.createElement("button");
+  btn.className = "pencil-btn";
+  btn.title = "Edit partner name";
+  btn.innerHTML = "&#9998;";
+  btn.addEventListener("click", function(){ inp.focus(); inp.select(); });
 
-card.innerHTML = `
-
-<div class="badge">${type}</div>
-
-<div class="card-name">${name}</div>
-
-<div class="card-amount">${amount}</div>
-
-<div class="drag">drag</div>
-
-`;
-
-card.dataset.name = name;
-card.dataset.amount = amount;
-
-card.addEventListener('dragstart', ()=>{
-
-currentDraggedCard = card;
-
-});
-
-document.getElementById('cardsContainer')
-.appendChild(card);
-
-document.getElementById('cardInput').value = "";
-
+  wrap.appendChild(inp);
+  wrap.appendChild(btn);
+  return wrap;
 }
 
-/* ENTER */
-
-document.getElementById("cardInput")
-.addEventListener("keypress",function(e){
-
-if(e.key==="Enter"){
-generateCard();
+function syncPartnerInputs(pIdx){
+  var allWraps = document.querySelectorAll(".th-name-wrap");
+  allWraps.forEach(function(wrap, i){
+    var localIdx = i % partners.length;
+    if(localIdx === pIdx){
+      var inp = wrap.querySelector("input");
+      if(inp) inp.value = partners[pIdx];
+    }
+  });
 }
 
-});
-function goBack(){
-
-window.location.href="index.html";
-
-}
-/* DROP */
-
-function activateCells(){
-
-document.querySelectorAll('.drop-cell')
-.forEach(cell=>{
-
-cell.contentEditable = "true";
-
-cell.addEventListener('dragover', e=>{
-
-e.preventDefault();
-cell.classList.add('hover');
-
-});
-
-cell.addEventListener('dragleave', ()=>{
-
-cell.classList.remove('hover');
-
-});
-
-cell.addEventListener('drop', e=>{
-
-e.preventDefault();
-
-cell.classList.remove('hover');
-
-if(!currentDraggedCard) return;
-
-cell.innerHTML = `
-${currentDraggedCard.dataset.name}
-<br>
-<b>${currentDraggedCard.dataset.amount}</b>
-`;
-
-currentDraggedCard.remove();
-
-});
-
-});
-
+/* ── BODY ── */
+function buildBody(){
+  var tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+  for(var r = 0; r < ROWS; r++) addBodyRow(tbody);
 }
 
-activateCells();
+function makeCell(isMid){
+  var td = document.createElement("td");
+  td.className = "drop-cell";
+  if(isMid) td.classList.add("mid-divider");
+  td.innerHTML = "<textarea rows='1'></textarea><div class='resize-row-handle'></div>";
+  return td;
+}
 
-/* ADD ROW */
+function addBodyRow(tbody){
+  var tr = document.createElement("tr");
+  tr.appendChild(makeCell(false));
+  partners.forEach(function(p, i){
+    tr.appendChild(makeCell(i === partners.length - 1));
+  });
+  tr.appendChild(makeCell(false));
+  partners.forEach(function(p, i){
+    tr.appendChild(makeCell(false));
+  });
+  tbody.appendChild(tr);
+}
 
+/* ── ADD ROW ── */
 function addRow(){
-
-const totalCols =
-document.querySelector("#partnerHeader")
-.children.length;
-
-const row =
-document.createElement('tr');
-
-for(let i=0;i<totalCols;i++){
-
-const td =
-document.createElement('td');
-
-td.className = "drop-cell";
-td.contentEditable = "true";
-
-row.appendChild(td);
-
+  addBodyRow(document.getElementById("tableBody"));
+  setupDropZones();
+  setupResize();
+  resizeCanvas();
 }
 
-document.getElementById('bodyRows')
-.appendChild(row);
-
-activateCells();
-
-}
-
-/* ADD PARTNER */
-
+/* ── ADD PARTNER ── */
 function addPartner(){
-
-const partnerName =
-prompt("Enter Partner Name");
-
-if(!partnerName) return;
-
-const header =
-document.getElementById('partnerHeader');
-
-const th1 =
-document.createElement('th');
-
-th1.className = "amount-col";
-
-th1.innerHTML = `
-<input value="${partnerName}">
-<div class="resize-handle"></div>
-`;
-
-header.insertBefore(th1,header.children[4]);
-
-const th2 =
-document.createElement('th');
-
-th2.className = "amount-col";
-
-th2.innerHTML = `
-<input value="${partnerName}">
-<div class="resize-handle"></div>
-`;
-
-header.appendChild(th2);
-
-document.querySelectorAll('#bodyRows tr')
-.forEach(row=>{
-
-const td1 =
-document.createElement('td');
-
-td1.className = "drop-cell";
-td1.contentEditable = "true";
-
-row.insertBefore(td1,row.children[4]);
-
-const td2 =
-document.createElement('td');
-
-td2.className = "drop-cell";
-td2.contentEditable = "true";
-
-row.appendChild(td2);
-
-});
-
-activateCells();
-
-enableResize();
-
-resizeCanvas();
-
+  var name = prompt("Enter Partner Name:");
+  if(!name || !name.trim()) return;
+  partners.push(name.trim());
+  buildTable();
 }
 
-/* RESIZE */
-
-function enableResize(){
-
-const handles =
-document.querySelectorAll(".resize-handle");
-
-handles.forEach(handle=>{
-
-handle.onmousedown = function(e){
-
-e.preventDefault();
-
-const th =
-handle.parentElement;
-
-let startX = e.pageX;
-let startWidth = th.offsetWidth;
-
-document.onmousemove = function(e){
-
-let newWidth =
-startWidth + (e.pageX - startX);
-
-if(newWidth > 70){
-
-th.style.width =
-newWidth + "px";
-
+/* ── DROP ZONES ── */
+function setupDropZones(){
+  document.querySelectorAll(".drop-cell").forEach(function(cell){
+    cell.addEventListener("dragover", function(e){ e.preventDefault(); });
+    cell.addEventListener("drop", function(e){
+      e.preventDefault();
+      var card = document.getElementById(e.dataTransfer.getData("text/plain"));
+      if(!card) return;
+      var ta = cell.querySelector("textarea");
+      if(!ta) return;
+      var allCells = Array.from(cell.parentElement.querySelectorAll("td"));
+      var cellIdx = allCells.indexOf(cell);
+      var n = partners.length;
+      var isCrSide = cellIdx > n;
+      var prefix = card.dataset.type === "DR" ? "To " : "By ";
+      if(cell.cellIndex === 0 || (isCrSide && cellIdx === n + 1)){
+        ta.value = prefix + card.dataset.particulars;
+      } else {
+        ta.value = card.dataset.amount;
+      }
+      card.remove();
+    });
+  });
 }
 
-resizeCanvas();
-
-};
-
-document.onmouseup = function(){
-
-document.onmousemove = null;
-document.onmouseup = null;
-
-};
-
-};
-
-});
-
+/* ── RESIZE HANDLES ── */
+function setupResize(){
+  document.querySelectorAll(".resize-handle").forEach(function(handle){
+    handle.onmousedown = function(e){
+      e.preventDefault(); e.stopPropagation();
+      var th = handle.parentElement;
+      var startX = e.pageX, startW = th.offsetWidth;
+      function onMove(e){ var w = Math.max(60, startW + (e.pageX - startX)); th.style.width = w+"px"; th.style.minWidth = w+"px"; resizeCanvas(); }
+      function onUp(){ document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); }
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    };
+  });
+  document.querySelectorAll(".resize-row-handle").forEach(function(handle){
+    handle.onmousedown = function(e){
+      e.preventDefault(); e.stopPropagation();
+      var tr = handle.parentElement.parentElement;
+      var tds = tr.querySelectorAll("td");
+      var startY = e.pageY, startH = tr.getBoundingClientRect().height;
+      function onMove(e){ var h = Math.max(36, startH + (e.pageY - startY)); tds.forEach(function(td){ td.style.height = h+"px"; }); }
+      function onUp(){ document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); resizeCanvas(); }
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+    };
+  });
 }
 
-enableResize();
-
-/* DRAWING */
-
-const canvas =
-document.getElementById('drawCanvas');
-
-const wrapper =
-document.getElementById('tableWrapper');
-
-const ctx =
-canvas.getContext('2d');
+/* ── CANVAS ── */
+var canvas = document.getElementById("drawLayer");
+var wrapper = document.getElementById("tableWrapper");
+var ctx = canvas.getContext("2d");
 
 function resizeCanvas(){
-
-canvas.width = wrapper.offsetWidth;
-canvas.height = wrapper.offsetHeight;
-
+  var imgData = null;
+  if(canvas.width > 0 && canvas.height > 0){ try{ imgData = ctx.getImageData(0,0,canvas.width,canvas.height); }catch(e){} }
+  canvas.width = wrapper.scrollWidth;
+  canvas.height = wrapper.scrollHeight;
+  if(imgData) try{ ctx.putImageData(imgData,0,0); }catch(e){}
 }
-
 resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-window.addEventListener("resize",resizeCanvas);
+var drawing = false;
+var tool = "typing";
 
-let drawing = false;
-let currentTool = "typing";
-
-/* TYPING */
-
-function enableTyping(){
-
-currentTool = "typing";
-
-canvas.style.pointerEvents = "none";
-
-document.getElementById("typingBtn")
-.classList.add("active-tool");
-
-document.getElementById("pencilBtn")
-.classList.remove("active-tool");
-
-document.getElementById("eraserBtn")
-.classList.remove("active-tool");
-
+function setTool(t){
+  tool = t;
+  ["typingBtn","pencilBtn","eraserBtn"].forEach(function(id){ document.getElementById(id).classList.remove("tool-active"); });
+  if(t === "typing"){
+    canvas.style.pointerEvents = "none"; canvas.style.zIndex = "0";
+    document.getElementById("typingBtn").classList.add("tool-active");
+  } else if(t === "pencil"){
+    canvas.style.pointerEvents = "auto"; canvas.style.zIndex = "99"; canvas.style.cursor = "crosshair";
+    document.getElementById("pencilBtn").classList.add("tool-active");
+  } else {
+    canvas.style.pointerEvents = "auto"; canvas.style.zIndex = "99"; canvas.style.cursor = "cell";
+    document.getElementById("eraserBtn").classList.add("tool-active");
+  }
 }
+setTool("typing");
 
-/* PENCIL */
+function getBelow(e){ canvas.style.pointerEvents="none"; var el=document.elementFromPoint(e.clientX,e.clientY); canvas.style.pointerEvents=tool==="typing"?"none":"auto"; return el; }
+canvas.addEventListener("dragover",function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent("dragover",{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
+canvas.addEventListener("drop",function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent("drop",{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
 
-function enablePencil(){
-
-currentTool = "pencil";
-
-canvas.style.pointerEvents = "auto";
-
-document.getElementById("pencilBtn")
-.classList.add("active-tool");
-
-document.getElementById("typingBtn")
-.classList.remove("active-tool");
-
-document.getElementById("eraserBtn")
-.classList.remove("active-tool");
-
-}
-
-/* ERASER */
-
-function enableEraser(){
-
-currentTool = "eraser";
-
-canvas.style.pointerEvents = "auto";
-
-document.getElementById("eraserBtn")
-.classList.add("active-tool");
-
-document.getElementById("typingBtn")
-.classList.remove("active-tool");
-
-document.getElementById("pencilBtn")
-.classList.remove("active-tool");
-
-}
-
-/* DEFAULT */
-
-enableTyping();
-
-/* START DRAW */
-
-canvas.addEventListener("mousedown",function(e){
-
-if(currentTool==="typing") return;
-
-drawing = true;
-
-ctx.beginPath();
-
-ctx.moveTo(e.offsetX,e.offsetY);
-
+canvas.addEventListener("mousedown",function(e){ if(tool==="typing") return; drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY); });
+window.addEventListener("mousemove",function(e){
+  if(!drawing) return;
+  var r = canvas.getBoundingClientRect();
+  ctx.lineCap="round"; ctx.lineJoin="round";
+  if(tool==="eraser"){ ctx.globalCompositeOperation="destination-out"; ctx.lineWidth=30; }
+  else { ctx.globalCompositeOperation="source-over"; ctx.strokeStyle="#111"; ctx.lineWidth=2.5; }
+  ctx.lineTo(e.clientX-r.left, e.clientY-r.top); ctx.stroke();
 });
+window.addEventListener("mouseup",function(){ if(!drawing) return; drawing=false; ctx.beginPath(); });
 
-/* DRAW */
+/* ── GENERATE CARD ── */
+var cardCount = 0;
+function generateCard(){
+  var input = document.getElementById("entryInput");
+  if(!input.value.trim()) return;
+  var text = input.value.trim();
+  var amountMatch = text.match(/\d+/g);
+  var amount = amountMatch ? amountMatch.join("") : "";
+  var type = text.toLowerCase().startsWith("by ") ? "CR" : "DR";
+  var particulars = text.replace(/^to\s+/i,"").replace(/^by\s+/i,"").replace(/[0-9\u20B9,]/g,"").trim();
+  var card = document.createElement("div");
+  cardCount++;
+  card.id = "card"+cardCount;
+  card.draggable = true;
+  card.dataset.type = type;
+  card.dataset.particulars = particulars;
+  card.dataset.amount = amount;
+  card.className = type==="DR" ? "card" : "card cr";
+  card.innerHTML = '<div class="tag">'+type+'</div><div class="particular">'+particulars+'</div><div class="amount">\u20B9'+amount+'</div><small>Drag Me</small>';
+  card.addEventListener("dragstart",function(e){ e.dataTransfer.setData("text/plain",card.id); });
+  document.getElementById("cardsContainer").appendChild(card);
+  input.value = "";
+}
+document.getElementById("entryInput").addEventListener("keypress",function(e){ if(e.key==="Enter") generateCard(); });
 
-canvas.addEventListener("mousemove",function(e){
-
-if(!drawing) return;
-
-ctx.lineCap = "round";
-
-if(currentTool==="eraser"){
-
-ctx.globalCompositeOperation =
-"destination-out";
-
-ctx.lineWidth = 24;
-
-}else{
-
-ctx.globalCompositeOperation =
-"source-over";
-
-ctx.strokeStyle = "#111";
-
-ctx.lineWidth = 3;
-
+/* ── CLEAR ── */
+function clearAll(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  document.querySelectorAll(".cap-table textarea").forEach(function(t){ t.value=""; });
+  document.getElementById("cardsContainer").innerHTML="";
 }
 
-ctx.lineTo(e.offsetX,e.offsetY);
-
-ctx.stroke();
-
-});
-
-/* STOP */
-
-canvas.addEventListener("mouseup",function(){
-
-drawing = false;
-
-});
-
-canvas.addEventListener("mouseleave",function(){
-
-drawing = false;
-
-});
-
-/* CLEAR */
-
-function clearCanvas(){
-
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-}
+/* ── INIT ── */
+buildTable();
 
 </script>
-
 </body>
 </html>
