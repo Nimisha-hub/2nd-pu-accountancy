@@ -99,6 +99,10 @@ body{
   overflow:hidden;
 }
 
+.box.right-box{
+  overflow-y:auto;
+}
+
 .box-head{
   padding:18px;
   border-bottom:1px solid #f1f1f1;
@@ -193,10 +197,6 @@ body{
   background:#ffe5e5;
 }
 
-.add-card{
-  background:#dcffe5;
-}
-
 .type-btn{
   background:#eadcff;
 }
@@ -212,7 +212,7 @@ body{
 
 .main-canvas-wrap{
   position:relative;
-  height:260px;
+  min-height:calc(100vh - 200px);
 
   background:
   repeating-linear-gradient(
@@ -222,7 +222,7 @@ body{
     #f1f1f1 32px
   );
 
-  overflow:hidden;
+  overflow:visible;
 }
 
 #wsCanvas{
@@ -231,115 +231,6 @@ body{
   height:100%;
   top:0;
   left:0;
-}
-
-/* NOTES AREA */
-
-.notes-area{
-  flex:1;
-  overflow-y:auto;
-  padding:14px;
-}
-
-.notes-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-/* NOTE CARD */
-
-.note-card{
-  border:1px solid #eee;
-  border-radius:20px;
-  overflow:hidden;
-  background:#fff;
-}
-
-.note-head{
-  padding:14px;
-  background:#f8fbff;
-  border-bottom:1px solid #eee;
-
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.note-num{
-  width:30px;
-  height:30px;
-  border-radius:50%;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  background:#dceeff;
-  color:#1565c0;
-  font-size:12px;
-  font-weight:700;
-}
-
-.note-body{
-  height:260px;
-  position:relative;
-
-  overflow:hidden;
-
-  background:
-  repeating-linear-gradient(
-    to bottom,
-    #fff 0px,
-    #fff 31px,
-    #f3f3f3 32px
-  );
-}
-
-.note-body canvas{
-  position:absolute;
-  width:100%;
-  height:100%;
-  top:0;
-  left:0;
-}
-
-.note-footer{
-  padding:12px;
-  border-top:1px solid #eee;
-
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.small-btn{
-  border:none;
-  padding:8px 12px;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:12px;
-  font-weight:600;
-}
-
-.black{
-  background:#ececec;
-}
-
-.gray{
-  background:#f5f5f5;
-}
-
-.red{
-  background:#ffe5e5;
-}
-
-.gold{
-  background:#fff2c7;
-}
-
-.purple{
-  background:#eadcff;
 }
 
 /* STICKY */
@@ -560,10 +451,6 @@ body{
     grid-template-columns:1fr;
   }
 
-  .notes-grid{
-    grid-template-columns:1fr;
-  }
-
 }
 
 </style>
@@ -648,7 +535,7 @@ body{
 
     <!-- RIGHT -->
 
-    <div class="box">
+    <div class="box right-box">
 
       <div class="box-head">
 
@@ -689,11 +576,6 @@ body{
           🗑 Clear
         </button>
 
-        <button class="tool add-card"
-        onclick="createWorkingNote()">
-          ＋ Add Working Note
-        </button>
-
         <div class="size-wrap">
 
           <span>Size</span>
@@ -715,12 +597,7 @@ body{
 
       </div>
 
-      <div class="notes-area">
 
-        <div class="notes-grid"
-        id="notesGrid"></div>
-
-      </div>
 
     </div>
 
@@ -875,191 +752,50 @@ function clearMain(){
 
 }
 
-/* WORKING NOTES */
+/* NEXT FREE Y POSITION */
 
-let noteCount=0;
+function nextY(parent){
 
-function createWorkingNote(){
+  let maxBottom=10;
 
-  noteCount++;
+  const children=parent.querySelectorAll(
+    '.sticky,.type-box'
+  );
 
-  const grid=document.getElementById('notesGrid');
+  children.forEach(el=>{
 
-  const card=document.createElement('div');
+    const bottom=
+    el.offsetTop+el.offsetHeight+14;
 
-  card.className='note-card';
+    if(bottom>maxBottom) maxBottom=bottom;
 
-  card.innerHTML=`
+  });
 
-    <div class="note-head">
-
-      <div class="note-num">
-        ${noteCount}
-      </div>
-
-      <h3>
-        Working Note ${noteCount}
-      </h3>
-
-    </div>
-
-    <div class="note-body">
-      <canvas></canvas>
-    </div>
-
-    <div class="note-footer">
-
-      <button class="small-btn black">
-        Pencil
-      </button>
-
-      <button class="small-btn gray">
-        Eraser
-      </button>
-
-      <button class="small-btn purple">
-        Type
-      </button>
-
-      <button class="small-btn gold">
-        Note
-      </button>
-
-      <button class="small-btn red">
-        Clear
-      </button>
-
-    </div>
-
-  `;
-
-  grid.appendChild(card);
-
-  setupNoteCard(card);
+  return maxBottom;
 
 }
 
-/* NOTE CARD */
+function growWrap(parent){
 
-function setupNoteCard(card){
+  const children=parent.querySelectorAll(
+    '.sticky,.type-box'
+  );
 
-  const canvas=card.querySelector('canvas');
+  let maxBottom=400;
 
-  const body=card.querySelector('.note-body');
+  children.forEach(el=>{
 
-  canvas.width=body.offsetWidth;
-  canvas.height=body.offsetHeight;
+    const bottom=
+    el.offsetTop+el.offsetHeight+30;
 
-  const ctx=canvas.getContext('2d');
+    if(bottom>maxBottom) maxBottom=bottom;
 
-  let drawing=false;
-  let tool='pencil';
+  });
 
-  let lx,ly;
-
-  function getPos(e){
-
-    const rect=canvas.getBoundingClientRect();
-
-    return{
-
-      x:(e.touches ? e.touches[0].clientX : e.clientX)-rect.left,
-
-      y:(e.touches ? e.touches[0].clientY : e.clientY)-rect.top
-
-    };
-
+  if(maxBottom>parent.offsetHeight){
+    parent.style.minHeight=maxBottom+'px';
+    resizeCanvas();
   }
-
-  canvas.addEventListener('mousedown',start);
-  canvas.addEventListener('touchstart',start);
-
-  function start(e){
-
-    drawing=true;
-
-    const p=getPos(e);
-
-    lx=p.x;
-    ly=p.y;
-
-  }
-
-  canvas.addEventListener('mousemove',draw);
-  canvas.addEventListener('touchmove',draw);
-
-  function draw(e){
-
-    if(!drawing) return;
-
-    e.preventDefault();
-
-    const p=getPos(e);
-
-    ctx.beginPath();
-
-    ctx.globalCompositeOperation=
-    tool==='eraser'
-    ? 'destination-out'
-    : 'source-over';
-
-    ctx.strokeStyle='#222';
-
-    ctx.lineWidth=
-    tool==='eraser'
-    ? 18
-    : 2;
-
-    ctx.lineCap='round';
-
-    ctx.moveTo(lx,ly);
-    ctx.lineTo(p.x,p.y);
-
-    ctx.stroke();
-
-    lx=p.x;
-    ly=p.y;
-
-  }
-
-  window.addEventListener('mouseup',()=>drawing=false);
-  window.addEventListener('touchend',()=>drawing=false);
-
-  const pencilBtn=card.querySelector('.black');
-  const eraserBtn=card.querySelector('.gray');
-  const typeBtn=card.querySelector('.purple');
-  const clearBtn=card.querySelector('.red');
-  const noteBtn=card.querySelector('.gold');
-
-  pencilBtn.onclick=()=>{
-
-    tool='pencil';
-
-  };
-
-  eraserBtn.onclick=()=>{
-
-    tool='eraser';
-
-  };
-
-  clearBtn.onclick=()=>{
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  };
-
-  noteBtn.onclick=()=>{
-
-    addSticky(body);
-
-  };
-
-  typeBtn.onclick=()=>{
-
-    addTypeBox(body);
-
-  };
 
 }
 
@@ -1072,7 +808,7 @@ function addSticky(parent){
   note.className='sticky';
 
   note.style.left='20px';
-  note.style.top='20px';
+  note.style.top=nextY(parent)+'px';
 
   note.innerHTML=`
 
@@ -1097,6 +833,8 @@ function addSticky(parent){
 
   parent.appendChild(note);
 
+  growWrap(parent);
+
   note.querySelector('.remove-btn').onclick=()=>{
 
     note.remove();
@@ -1120,8 +858,8 @@ function addTypeBox(parent){
 
   box.className='type-box';
 
-  box.style.left='40px';
-  box.style.top='40px';
+  box.style.left='20px';
+  box.style.top=nextY(parent)+'px';
 
   box.innerHTML=`
 
@@ -1143,6 +881,8 @@ function addTypeBox(parent){
   `;
 
   parent.appendChild(box);
+
+  growWrap(parent);
 
   box.querySelector('.remove-btn').onclick=()=>{
 
@@ -1469,12 +1209,6 @@ function makeResizable(element){
   }
 
 }
-
-/* DEFAULT NOTES */
-
-createWorkingNote();
-createWorkingNote();
-createWorkingNote();
 
 </script>
 
