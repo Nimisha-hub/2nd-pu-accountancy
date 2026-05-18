@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2nd PU Accountancy</title>
+<title>Revaluation A/c</title>
 <style>
 *{ margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
 body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
@@ -27,8 +27,7 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .reval-table tbody tr td:nth-child(1), .reval-table tbody tr td:nth-child(2), .reval-table tbody tr td:nth-child(3),
 .total-row td:nth-child(1), .total-row td:nth-child(2), .total-row td:nth-child(3){ border-right:2px solid #333; }
 .reval-table tbody tr td{ height:46px; vertical-align:middle; }
-
-.drop-active{ background:transparent !important; }
+.drop-active{ background:#fffbe6 !important; }
 .reval-table textarea{ width:100%; height:100%; border:none; outline:none; font-size:15px; background:transparent; padding:4px 6px; cursor:text; resize:none; font-family:Arial,sans-serif; overflow:hidden; line-height:1.4; display:block; }
 .reval-table textarea:focus{ background:#fff8d8; border-radius:6px; }
 .total-row td{ border-top:2px solid #333; font-weight:bold; font-size:15px; height:44px; vertical-align:middle; padding:6px 10px; }
@@ -37,9 +36,17 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .col-amount{ width:20%; text-align:right; }
 .resize-handle{ position:absolute; right:-5px; top:0; width:10px; height:100%; cursor:col-resize; z-index:20; }
 .resize-row{ position:absolute; bottom:-5px; left:0; width:100%; height:10px; cursor:row-resize; z-index:20; }
+
+/* RIGHT PANEL */
 .right-panel{ background:white; padding:24px; border-radius:28px; box-shadow:0 6px 20px rgba(0,0,0,0.08); display:flex; flex-direction:column; height:850px; overflow:hidden; }
-.cards-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.cards-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
 .cards-header h2{ font-size:28px; }
+.cards-action-row{ display:flex; gap:10px; margin-bottom:14px; }
+.save-cards-btn{ background:#1db56c; color:white; border:none; padding:11px 20px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:7px; }
+.save-cards-btn:hover{ background:#17a05f; transform:translateY(-2px); }
+.delete-cards-btn{ background:#ff4d4d; color:white; border:none; padding:11px 20px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:7px; }
+.delete-cards-btn:hover{ background:#e03d3d; transform:translateY(-2px); }
+.save-status{ font-size:12px; color:#888; align-self:center; margin-left:4px; }
 .card-input-area{ display:flex; gap:12px; margin-bottom:18px; }
 .card-input-area input{ flex:1; padding:14px; border-radius:18px; border:2px solid #ddd; font-size:15px; outline:none; transition:0.25s; }
 .card-input-area input:focus{ border-color:#4d6fff; box-shadow:0 0 0 4px rgba(77,111,255,0.12); }
@@ -54,7 +61,14 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .card.cr .tag{ background:#dff7ea; color:#1db56c; }
 .particular{ font-size:14px; font-weight:600; line-height:1.3; margin-bottom:6px; word-break:break-word; }
 .amount{ font-size:14px; font-weight:bold; }
+.card-del-btn{ position:absolute; right:8px; top:8px; background:#ffe5e5; border:none; border-radius:50%; width:22px; height:22px; font-size:13px; cursor:pointer; color:#cc0000; display:flex; align-items:center; justify-content:center; opacity:0; transition:0.2s; }
+.card:hover .card-del-btn{ opacity:1; }
 .card small{ position:absolute; right:10px; bottom:8px; color:#aaa; font-size:11px; }
+
+/* TOAST */
+.toast{ position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:#111; color:#fff; padding:12px 28px; border-radius:16px; font-size:14px; font-weight:600; opacity:0; transition:all 0.3s; pointer-events:none; z-index:9999; }
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
 @media(max-width:1000px){ .main-layout{ grid-template-columns:1fr; } .right-panel{ height:auto; } .title{ font-size:30px; } }
 </style>
 </head>
@@ -73,7 +87,7 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
       <button id="typingBtn" onclick="setTool('typing')">&#9000; Typing</button>
       <button id="pencilBtn" onclick="setTool('pencil')">&#9998; Pencil</button>
       <button id="eraserBtn" onclick="setTool('eraser')">&#129657; Eraser</button>
-      <button onclick="clearAll()">&#129529; Clear</button>
+      <button onclick="confirmClearAll()">&#129529; Clear Table</button>
     </div>
     <div class="title">Revaluation A/c</div>
     <div class="dr-cr-bar">
@@ -89,13 +103,7 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
           <th class="col-particular">Particulars</th>
           <th class="col-amount">Amount (Rs.)</th>
         </tr>
-        <tbody id="tableBody">
-          <tr><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td></tr>
-          <tr><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td></tr>
-          <tr><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td></tr>
-          <tr><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td></tr>
-          <tr><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td></tr>
-        </tbody>
+        <tbody id="tableBody"></tbody>
         <tr class="total-row">
           <td>Total</td>
           <td><textarea class="total-ta" id="drTotal"></textarea></td>
@@ -111,6 +119,11 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
       <h2>Entry Cards</h2>
       <p>Generate Entries</p>
     </div>
+    <div class="cards-action-row">
+      <button class="save-cards-btn" onclick="saveCards()">💾 Save Cards</button>
+      <button class="delete-cards-btn" onclick="confirmDeleteAllCards()">🗑️ Delete All Cards</button>
+      <span class="save-status" id="saveStatus"></span>
+    </div>
     <div class="card-input-area">
       <input id="entryInput" placeholder="Example: To Stock 12000"/>
       <button onclick="generateCard()">Generate</button>
@@ -121,208 +134,301 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-/* ADD ROW */
-function addRow(){
-  const row = document.createElement("tr");
-  row.innerHTML = '<td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td>';
-  document.getElementById("tableBody").appendChild(row);
+/* ── STORAGE KEYS ── */
+var STORAGE_TABLE  = 'reval_table_data';
+var STORAGE_CARDS  = 'reval_cards_data';
+var STORAGE_TOTALS = 'reval_totals';
+
+/* ── TOAST ── */
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); },2200);
+}
+
+/* ── TABLE SAVE / LOAD ── */
+function saveTable(){
+  var rows=[];
+  document.querySelectorAll('#tableBody tr').forEach(function(tr){
+    var cells=[];
+    tr.querySelectorAll('textarea').forEach(function(ta){ cells.push(ta.value); });
+    var heights=[];
+    tr.querySelectorAll('td').forEach(function(td){ heights.push(td.style.height||''); });
+    rows.push({cells:cells,heights:heights});
+  });
+  var totals={dr:document.getElementById('drTotal').value, cr:document.getElementById('crTotal').value};
+  localStorage.setItem(STORAGE_TABLE, JSON.stringify(rows));
+  localStorage.setItem(STORAGE_TOTALS, JSON.stringify(totals));
+}
+
+function loadTable(){
+  var raw=localStorage.getItem(STORAGE_TABLE);
+  var totRaw=localStorage.getItem(STORAGE_TOTALS);
+  var rows=raw?JSON.parse(raw):null;
+  if(!rows||rows.length===0){
+    // Default 5 empty rows
+    for(var i=0;i<5;i++) addRow(true);
+  } else {
+    rows.forEach(function(rowData){
+      addRow(true, rowData);
+    });
+  }
+  if(totRaw){
+    var t=JSON.parse(totRaw);
+    document.getElementById('drTotal').value=t.dr||'';
+    document.getElementById('crTotal').value=t.cr||'';
+  }
+}
+
+/* ── ADD ROW ── */
+var cardCount=0;
+function addRow(silent, data){
+  var row=document.createElement('tr');
+  row.innerHTML='<td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td><td class="drop-cell"><textarea rows="1"></textarea><div class="resize-handle"></div><div class="resize-row"></div></td>';
+  document.getElementById('tableBody').appendChild(row);
+  if(data){
+    var tas=row.querySelectorAll('textarea');
+    data.cells.forEach(function(v,i){ if(tas[i]) tas[i].value=v; });
+    var tds=row.querySelectorAll('td');
+    data.heights.forEach(function(h,i){ if(tds[i]&&h) tds[i].style.height=h; });
+  }
   setupDropZones();
   setupResize();
+  setupAutoSave(row);
   resizeCanvas();
+  if(!silent) saveTable();
 }
 
-/* TOTALS */
-function calculateTotals(){
-  let dr=0, cr=0;
-  document.querySelectorAll("#tableBody tr").forEach(function(row){
-    var inputs = row.querySelectorAll("textarea");
-    dr += Number(inputs[1].value)||0;
-    cr += Number(inputs[3].value)||0;
+/* Auto-save on any textarea change */
+function setupAutoSave(row){
+  row.querySelectorAll('textarea').forEach(function(ta){
+    ta.addEventListener('input', function(){ saveTable(); });
   });
-  document.getElementById("drTotal").value = "\u20B9"+dr;
-  document.getElementById("crTotal").value = "\u20B9"+cr;
 }
 
+/* ── CALCULATE TOTALS ── */
+function calculateTotals(){
+  var dr=0,cr=0;
+  document.querySelectorAll('#tableBody tr').forEach(function(row){
+    var inputs=row.querySelectorAll('textarea');
+    dr+=Number(inputs[1].value)||0;
+    cr+=Number(inputs[3].value)||0;
+  });
+  document.getElementById('drTotal').value='₹'+dr;
+  document.getElementById('crTotal').value='₹'+cr;
+  saveTable();
+}
 
+/* ── CLEAR TABLE ONLY ── */
+function confirmClearAll(){
+  if(!confirm('Clear the table? Cards will NOT be deleted.')) return;
+  document.querySelectorAll('.reval-table textarea').forEach(function(i){ i.value=''; });
+  document.getElementById('drTotal').value='';
+  document.getElementById('crTotal').value='';
+  // Remove extra rows, keep 5
+  var tbody=document.getElementById('tableBody');
+  while(tbody.rows.length>5) tbody.deleteRow(tbody.rows.length-1);
+  saveTable();
+  showToast('Table cleared!');
+}
 
-/* GENERATE CARD */
-var cardCount = 0;
+/* ── CARDS SAVE / LOAD ── */
+function saveCards(){
+  var cards=[];
+  document.querySelectorAll('#cardsContainer .card').forEach(function(card){
+    cards.push({
+      type: card.dataset.type,
+      particulars: card.dataset.particulars,
+      amount: card.dataset.amount
+    });
+  });
+  localStorage.setItem(STORAGE_CARDS, JSON.stringify(cards));
+  var now=new Date();
+  document.getElementById('saveStatus').textContent='Saved at '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  showToast('Cards saved! ✅');
+}
+
+function loadCards(){
+  var raw=localStorage.getItem(STORAGE_CARDS);
+  if(!raw) return;
+  var cards=JSON.parse(raw);
+  cards.forEach(function(c){
+    createCard(c.type, c.particulars, c.amount);
+  });
+}
+
+function confirmDeleteAllCards(){
+  if(!confirm('Delete ALL saved cards? This cannot be undone.')) return;
+  document.getElementById('cardsContainer').innerHTML='';
+  localStorage.removeItem(STORAGE_CARDS);
+  document.getElementById('saveStatus').textContent='';
+  showToast('All cards deleted!');
+}
+
+/* ── GENERATE CARD ── */
 function generateCard(){
-  var input = document.getElementById("entryInput");
+  var input=document.getElementById('entryInput');
   if(!input.value.trim()) return;
-  var text = input.value.trim();
-  var amountMatch = text.match(/\d+/g);
-  var amount = amountMatch ? amountMatch.join("") : "";
-  var type = text.toLowerCase().startsWith("by ") ? "CR" : "DR";
-  var particulars = text.replace(/^to\s+/i,"").replace(/^by\s+/i,"").replace(/[0-9\u20B9,]/g,"").trim();
-  var card = document.createElement("div");
-  cardCount++;
-  card.id = "card"+cardCount;
-  card.draggable = true;
-  card.dataset.type = type;
-  card.dataset.particulars = particulars;
-  card.dataset.amount = amount;
-  card.className = type==="DR" ? "card" : "card cr";
-  card.innerHTML = '<div class="tag">'+type+'</div><div class="particular">'+particulars+'</div><div class="amount">\u20B9'+amount+'</div><small>Drag Me</small>';
-  card.addEventListener("dragstart", function(e){ e.dataTransfer.setData("text/plain", card.id); });
-  document.getElementById("cardsContainer").appendChild(card);
-  input.value = "";
+  var text=input.value.trim();
+  var amountMatch=text.match(/\d+/g);
+  var amount=amountMatch?amountMatch.join(''):'';
+  var type=text.toLowerCase().startsWith('by ')?'CR':'DR';
+  var particulars=text.replace(/^to\s+/i,'').replace(/^by\s+/i,'').replace(/[0-9₹,]/g,'').trim();
+  createCard(type, particulars, amount);
+  input.value='';
 }
-document.getElementById("entryInput").addEventListener("keypress", function(e){ if(e.key==="Enter") generateCard(); });
 
-/* DROP ZONES */
+function createCard(type, particulars, amount){
+  var card=document.createElement('div');
+  cardCount++;
+  card.id='card'+cardCount;
+  card.draggable=true;
+  card.dataset.type=type;
+  card.dataset.particulars=particulars;
+  card.dataset.amount=amount;
+  card.className=type==='DR'?'card':'card cr';
+  card.innerHTML='<button class="card-del-btn" title="Delete card">✕</button><div class="tag">'+type+'</div><div class="particular">'+particulars+'</div><div class="amount">₹'+amount+'</div><small>Drag Me</small>';
+  card.addEventListener('dragstart',function(e){ e.dataTransfer.setData('text/plain',card.id); });
+  card.querySelector('.card-del-btn').addEventListener('click',function(e){
+    e.stopPropagation();
+    if(confirm('Delete this card?')){ card.remove(); }
+  });
+  document.getElementById('cardsContainer').appendChild(card);
+}
+
+document.getElementById('entryInput').addEventListener('keypress',function(e){ if(e.key==='Enter') generateCard(); });
+
+/* ── DROP ZONES ── */
 function setupDropZones(){
-  document.querySelectorAll(".drop-cell").forEach(function(cell){
-    cell.addEventListener("dragover", function(e){ e.preventDefault(); cell.classList.add("drop-active"); });
-    cell.addEventListener("dragleave", function(){ cell.classList.remove("drop-active"); });
-    cell.addEventListener("drop", function(e){
+  document.querySelectorAll('.drop-cell').forEach(function(cell){
+    if(cell._dropSetup) return;
+    cell._dropSetup=true;
+    cell.addEventListener('dragover',function(e){ e.preventDefault(); cell.classList.add('drop-active'); });
+    cell.addEventListener('dragleave',function(){ cell.classList.remove('drop-active'); });
+    cell.addEventListener('drop',function(e){
       e.preventDefault();
-      cell.classList.remove("drop-active");
-      var card = document.getElementById(e.dataTransfer.getData("text/plain"));
+      cell.classList.remove('drop-active');
+      var card=document.getElementById(e.dataTransfer.getData('text/plain'));
       if(!card) return;
-      var inputs = cell.parentElement.querySelectorAll("textarea");
-      if(card.dataset.type==="DR"){
-        inputs[0].value = "To "+card.dataset.particulars;
-        inputs[1].value = card.dataset.amount;
+      var inputs=cell.parentElement.querySelectorAll('textarea');
+      if(card.dataset.type==='DR'){
+        inputs[0].value='To '+card.dataset.particulars;
+        inputs[1].value=card.dataset.amount;
       } else {
-        inputs[2].value = "By "+card.dataset.particulars;
-        inputs[3].value = card.dataset.amount;
+        inputs[2].value='By '+card.dataset.particulars;
+        inputs[3].value=card.dataset.amount;
       }
       card.remove();
       calculateTotals();
+      saveTable();
     });
   });
 }
-setupDropZones();
 
-/* RESIZE */
+/* ── RESIZE ── */
 function setupResize(){
-  document.querySelectorAll(".resize-handle").forEach(function(handle){
-    handle.onmousedown = function(e){
+  document.querySelectorAll('.resize-handle').forEach(function(handle){
+    if(handle._resizeSetup) return;
+    handle._resizeSetup=true;
+    handle.onmousedown=function(e){
       e.preventDefault(); e.stopPropagation();
-      var td=handle.parentElement, startX=e.pageX, startW=td.offsetWidth;
-      function onMove(e){ var w=Math.max(60,startW+(e.pageX-startX)); td.style.width=w+"px"; td.style.minWidth=w+"px"; }
-      function onUp(){ document.removeEventListener("mousemove",onMove); document.removeEventListener("mouseup",onUp); resizeCanvas(); }
-      document.addEventListener("mousemove",onMove); document.addEventListener("mouseup",onUp);
+      var td=handle.parentElement,startX=e.pageX,startW=td.offsetWidth;
+      function onMove(e){ var w=Math.max(60,startW+(e.pageX-startX)); td.style.width=w+'px'; td.style.minWidth=w+'px'; }
+      function onUp(){ document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); resizeCanvas(); saveTable(); }
+      document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
     };
   });
-  document.querySelectorAll(".resize-row").forEach(function(handle){
-    handle.onmousedown = function(e){
+  document.querySelectorAll('.resize-row').forEach(function(handle){
+    if(handle._rowSetup) return;
+    handle._rowSetup=true;
+    handle.onmousedown=function(e){
       e.preventDefault(); e.stopPropagation();
-      var tr=handle.parentElement.parentElement, tds=tr.querySelectorAll("td"), startY=e.pageY, startH=tr.getBoundingClientRect().height;
-      function onMove(e){ var h=Math.max(36,startH+(e.pageY-startY)); tds.forEach(function(td){td.style.height=h+"px"; td.style.lineHeight=h+"px";}); }
-      function onUp(){ document.removeEventListener("mousemove",onMove); document.removeEventListener("mouseup",onUp); resizeCanvas(); }
-      document.addEventListener("mousemove",onMove); document.addEventListener("mouseup",onUp);
+      var tr=handle.parentElement.parentElement,tds=tr.querySelectorAll('td'),startY=e.pageY,startH=tr.getBoundingClientRect().height;
+      function onMove(e){ var h=Math.max(36,startH+(e.pageY-startY)); tds.forEach(function(td){ td.style.height=h+'px'; td.style.lineHeight=h+'px'; }); }
+      function onUp(){ document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); resizeCanvas(); saveTable(); }
+      document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
     };
   });
 }
-setupResize();
 
-/* CANVAS */
-var canvas = document.getElementById("drawLayer");
-var wrapper = document.getElementById("tableWrapper");
-var ctx = canvas.getContext("2d");
+/* ── CANVAS ── */
+var canvas=document.getElementById('drawLayer');
+var wrapper=document.getElementById('tableWrapper');
+var ctx=canvas.getContext('2d');
 
 function resizeCanvas(){
-  var imgData = null;
-  if(canvas.width > 0 && canvas.height > 0){
-    try{ imgData = ctx.getImageData(0,0,canvas.width,canvas.height); }catch(e){}
-  }
-  canvas.width  = wrapper.scrollWidth;
-  canvas.height = wrapper.scrollHeight;
+  var imgData=null;
+  if(canvas.width>0&&canvas.height>0){ try{ imgData=ctx.getImageData(0,0,canvas.width,canvas.height); }catch(e){} }
+  canvas.width=wrapper.scrollWidth;
+  canvas.height=wrapper.scrollHeight;
   if(imgData) try{ ctx.putImageData(imgData,0,0); }catch(e){}
 }
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener('resize',resizeCanvas);
 
-var drawing = false;
-var tool = "typing";
+var drawing=false;
+var tool='typing';
 
 function setTool(t){
-  tool = t;
-  ["typingBtn","pencilBtn","eraserBtn"].forEach(function(id){ document.getElementById(id).classList.remove("tool-active"); });
-  if(t==="typing"){
-    canvas.style.pointerEvents = "none";
-    canvas.style.zIndex = "0";
-    document.getElementById("typingBtn").classList.add("tool-active");
-  } else if(t==="pencil"){
-    canvas.style.pointerEvents = "auto";
-    canvas.style.zIndex = "99";
-    canvas.style.cursor = "crosshair";
-    document.getElementById("pencilBtn").classList.add("tool-active");
+  tool=t;
+  ['typingBtn','pencilBtn','eraserBtn'].forEach(function(id){ document.getElementById(id).classList.remove('tool-active'); });
+  if(t==='typing'){
+    canvas.style.pointerEvents='none'; canvas.style.zIndex='0';
+    document.getElementById('typingBtn').classList.add('tool-active');
+  } else if(t==='pencil'){
+    canvas.style.pointerEvents='auto'; canvas.style.zIndex='99'; canvas.style.cursor='crosshair';
+    document.getElementById('pencilBtn').classList.add('tool-active');
   } else {
-    canvas.style.pointerEvents = "auto";
-    canvas.style.zIndex = "99";
-    canvas.style.cursor = "cell";
-    document.getElementById("eraserBtn").classList.add("tool-active");
+    canvas.style.pointerEvents='auto'; canvas.style.zIndex='99'; canvas.style.cursor='cell';
+    document.getElementById('eraserBtn').classList.add('tool-active');
   }
 }
-setTool("typing");
+setTool('typing');
 
-/* Always allow drag-drop regardless of tool — forward drag events through canvas */
-canvas.addEventListener("dragover", function(e){
+canvas.addEventListener('dragover',function(e){
   e.preventDefault();
-  var el = getElementBelowCanvas(e);
-  if(el) el.dispatchEvent(new DragEvent("dragover", {bubbles:true, cancelable:true, dataTransfer:e.dataTransfer}));
+  var el=getElementBelowCanvas(e);
+  if(el) el.dispatchEvent(new DragEvent('dragover',{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer}));
 });
-
-canvas.addEventListener("drop", function(e){
+canvas.addEventListener('drop',function(e){
   e.preventDefault();
-  var el = getElementBelowCanvas(e);
-  if(el) el.dispatchEvent(new DragEvent("drop", {bubbles:true, cancelable:true, dataTransfer:e.dataTransfer}));
+  var el=getElementBelowCanvas(e);
+  if(el) el.dispatchEvent(new DragEvent('drop',{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer}));
 });
-
-canvas.addEventListener("dragleave", function(e){
-  var el = getElementBelowCanvas(e);
-  if(el) el.dispatchEvent(new DragEvent("dragleave", {bubbles:true, dataTransfer:e.dataTransfer}));
+canvas.addEventListener('dragleave',function(e){
+  var el=getElementBelowCanvas(e);
+  if(el) el.dispatchEvent(new DragEvent('dragleave',{bubbles:true,dataTransfer:e.dataTransfer}));
 });
-
 function getElementBelowCanvas(e){
-  canvas.style.pointerEvents = "none";
-  var el = document.elementFromPoint(e.clientX, e.clientY);
-  canvas.style.pointerEvents = tool === "typing" ? "none" : "auto";
+  canvas.style.pointerEvents='none';
+  var el=document.elementFromPoint(e.clientX,e.clientY);
+  canvas.style.pointerEvents=tool==='typing'?'none':'auto';
   return el;
 }
 
-canvas.addEventListener("mousedown", function(e){
-  if(tool==="typing") return;
-  drawing = true;
-  ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
+canvas.addEventListener('mousedown',function(e){
+  if(tool==='typing') return;
+  drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY);
 });
-
-window.addEventListener("mousemove", function(e){
+window.addEventListener('mousemove',function(e){
   if(!drawing) return;
-  var r = canvas.getBoundingClientRect();
-  var x = e.clientX - r.left;
-  var y = e.clientY - r.top;
-  ctx.lineCap="round"; ctx.lineJoin="round";
-  if(tool==="eraser"){
-    ctx.globalCompositeOperation="destination-out";
-    ctx.lineWidth=30;
-  } else {
-    ctx.globalCompositeOperation="source-over";
-    ctx.strokeStyle="#111";
-    ctx.lineWidth=2.5;
-  }
-  ctx.lineTo(x,y);
-  ctx.stroke();
+  var r=canvas.getBoundingClientRect();
+  var x=e.clientX-r.left, y=e.clientY-r.top;
+  ctx.lineCap='round'; ctx.lineJoin='round';
+  if(tool==='eraser'){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=30; }
+  else { ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#111'; ctx.lineWidth=2.5; }
+  ctx.lineTo(x,y); ctx.stroke();
 });
+window.addEventListener('mouseup',function(){ if(!drawing)return; drawing=false; ctx.beginPath(); });
 
-window.addEventListener("mouseup", function(){
-  if(!drawing) return;
-  drawing = false;
-  ctx.beginPath();
-});
-
-function clearAll(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  document.querySelectorAll(".reval-table textarea").forEach(function(i){ i.value=""; });
-  document.getElementById("drTotal").value="";
-  document.getElementById("crTotal").value="";
-  document.getElementById("cardsContainer").innerHTML="";
-}
+/* ── INIT ── */
+loadTable();
+loadCards();
+setupDropZones();
+setupResize();
 </script>
 </body>
 </html>
