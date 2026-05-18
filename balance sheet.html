@@ -17,46 +17,43 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .tool-active{ background:#4d6fff !important; }
 .title{ text-align:center; font-size:40px; font-weight:700; margin-bottom:14px; }
 
-/* Table */
 .table-wrapper{ position:relative; overflow:auto; border-radius:4px; }
 #drawLayer{ position:absolute; top:0; left:0; z-index:2; pointer-events:none; }
 .cap-table{ border-collapse:collapse; table-layout:fixed; background:white; border:2px solid #333; width:100%; }
 .cap-table th, .cap-table td{ border:none; padding:6px 10px; position:relative; min-width:80px; }
 
-/* Header */
 .cap-table thead tr th{ background:#fff; font-size:14px; font-weight:700; text-align:center; height:44px; border-bottom:2px solid #333; }
 .cap-table thead tr th:not(:last-child){ border-right:1px solid #aaa; }
 .cap-table thead tr th.mid-divider{ border-right:2px solid #333 !important; }
 .cap-table thead tr th.amt-th{ width:120px; }
 
-/* Body */
 .cap-table tbody tr td{ height:46px; vertical-align:middle; }
 .cap-table tbody tr td:not(:last-child){ border-right:1px solid #aaa; }
 .cap-table tbody tr td.mid-divider{ border-right:2px solid #333 !important; }
 
-/* Textarea */
-.cap-table textarea{
-  width:100%; height:100%; border:none; outline:none; font-size:14px;
-  background:transparent; padding:4px 6px; cursor:text; resize:none;
-  font-family:Arial,sans-serif; overflow:hidden; line-height:1.4; display:block;
-}
+.cap-table textarea{ width:100%; height:100%; border:none; outline:none; font-size:14px; background:transparent; padding:4px 6px; cursor:text; resize:none; font-family:Arial,sans-serif; overflow:hidden; line-height:1.4; display:block; }
 .cap-table textarea:focus{ background:#fff8d8; border-radius:6px; }
 
-/* Total row */
 .total-row td{ border-top:2px solid #333; font-weight:bold; font-size:14px; height:44px; vertical-align:middle; padding:0; }
 .total-row td:not(:last-child){ border-right:1px solid #aaa; }
 .total-row td.mid-divider{ border-right:2px solid #333 !important; }
 .total-row td.label-td{ padding:6px 10px; }
 .total-ta{ width:100%; height:100%; border:none; outline:none; font-size:14px; font-weight:bold; background:transparent; resize:none; font-family:Arial,sans-serif; cursor:text; padding:4px 6px; display:block; }
 
-/* Resize handles */
 .resize-handle{ position:absolute; right:-5px; top:0; width:10px; height:100%; cursor:col-resize; z-index:20; }
 .resize-row-handle{ position:absolute; bottom:-5px; left:0; width:100%; height:10px; cursor:row-resize; z-index:20; }
 
 /* RIGHT PANEL */
 .right-panel{ background:white; padding:24px; border-radius:28px; box-shadow:0 6px 20px rgba(0,0,0,0.08); display:flex; flex-direction:column; height:850px; overflow:hidden; }
-.cards-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.cards-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
 .cards-header h2{ font-size:26px; }
+.cards-action-row{ display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+.save-cards-btn{ background:#1db56c; color:white; border:none; padding:11px 20px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; transition:0.2s; }
+.save-cards-btn:hover{ background:#17a05f; transform:translateY(-2px); }
+.delete-cards-btn{ background:#ff4d4d; color:white; border:none; padding:11px 20px; border-radius:14px; font-size:14px; font-weight:700; cursor:pointer; transition:0.2s; }
+.delete-cards-btn:hover{ background:#e03d3d; transform:translateY(-2px); }
+.save-status{ font-size:12px; color:#888; align-self:center; }
+
 .card-input-area{ display:flex; gap:10px; margin-bottom:18px; }
 .card-input-area input{ flex:1; padding:12px; border-radius:16px; border:2px solid #ddd; font-size:14px; outline:none; transition:0.25s; }
 .card-input-area input:focus{ border-color:#4d6fff; box-shadow:0 0 0 4px rgba(77,111,255,0.12); }
@@ -68,7 +65,13 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .card:hover{ transform:translateY(-5px) scale(1.03); box-shadow:0 10px 20px rgba(0,0,0,0.12); }
 .particular{ font-size:13px; font-weight:600; line-height:1.3; margin-bottom:4px; word-break:break-word; }
 .amount{ font-size:13px; font-weight:bold; }
+.card-del-btn{ position:absolute; right:7px; top:7px; background:#ffe5e5; border:none; border-radius:50%; width:20px; height:20px; font-size:12px; cursor:pointer; color:#cc0000; display:flex; align-items:center; justify-content:center; opacity:0; transition:0.2s; }
+.card:hover .card-del-btn{ opacity:1; }
 .card small{ position:absolute; right:8px; bottom:6px; color:#aaa; font-size:10px; }
+
+/* TOAST */
+.toast{ position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:#111; color:#fff; padding:12px 28px; border-radius:16px; font-size:14px; font-weight:600; opacity:0; transition:all 0.3s; pointer-events:none; z-index:9999; }
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
 @media(max-width:1000px){ .main-layout{ grid-template-columns:1fr; } .right-panel{ height:auto; } .title{ font-size:28px; } }
 </style>
@@ -87,7 +90,7 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
       <button id="typingBtn" onclick="setTool('typing')">&#9000; Typing</button>
       <button id="pencilBtn" onclick="setTool('pencil')">&#9998; Pencil</button>
       <button id="eraserBtn" onclick="setTool('eraser')">&#129657; Eraser</button>
-      <button onclick="clearAll()">&#129529; Clear</button>
+      <button onclick="confirmClearTable()">&#129529; Clear Table</button>
     </div>
     <div class="title">Balance Sheet</div>
     <div class="table-wrapper" id="tableWrapper">
@@ -105,9 +108,9 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
         <tfoot>
           <tr class="total-row">
             <td class="label-td">Total</td>
-            <td class="mid-divider"><textarea class="total-ta"></textarea></td>
+            <td class="mid-divider"><textarea class="total-ta" id="liabTotal"></textarea></td>
             <td class="label-td">Total</td>
-            <td><textarea class="total-ta"></textarea></td>
+            <td><textarea class="total-ta" id="assTotal"></textarea></td>
           </tr>
         </tfoot>
       </table>
@@ -119,6 +122,11 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
       <h2>Entry Cards</h2>
       <p>Generate Entries</p>
     </div>
+    <div class="cards-action-row">
+      <button class="save-cards-btn" onclick="saveCards()">💾 Save Cards</button>
+      <button class="delete-cards-btn" onclick="confirmDeleteAllCards()">🗑️ Delete All Cards</button>
+      <span class="save-status" id="saveStatus"></span>
+    </div>
     <div class="card-input-area">
       <input id="entryInput" placeholder="E.g. Building 50000"/>
       <button onclick="generateCard()">Generate</button>
@@ -129,176 +137,260 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-var ROWS = 5;
+/* ── STORAGE KEYS ── */
+var SK_TABLE  = 'bs_table_data';
+var SK_TOTALS = 'bs_totals';
+var SK_CARDS  = 'bs_cards_data';
+
 var cardCount = 0;
 
-function buildTable(){
-  buildBody();
+/* ── TOAST ── */
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); },2200);
+}
+
+/* ── SAVE TABLE ── */
+function saveTable(){
+  var rows=[];
+  document.querySelectorAll('#tableBody tr').forEach(function(tr){
+    var cells=[];
+    tr.querySelectorAll('textarea').forEach(function(ta){ cells.push(ta.value); });
+    var heights=[];
+    tr.querySelectorAll('td').forEach(function(td){ heights.push(td.style.height||''); });
+    rows.push({cells:cells, heights:heights});
+  });
+  localStorage.setItem(SK_TABLE, JSON.stringify(rows));
+  localStorage.setItem(SK_TOTALS, JSON.stringify({
+    liab: document.getElementById('liabTotal').value,
+    ass:  document.getElementById('assTotal').value
+  }));
+}
+
+/* ── LOAD TABLE ── */
+function loadTable(){
+  var raw=localStorage.getItem(SK_TABLE);
+  var tbody=document.getElementById('tableBody');
+  tbody.innerHTML='';
+  if(raw){
+    JSON.parse(raw).forEach(function(rowData){ addBodyRow(tbody, rowData); });
+  } else {
+    for(var i=0;i<5;i++) addBodyRow(tbody, null);
+  }
+  var totRaw=localStorage.getItem(SK_TOTALS);
+  if(totRaw){
+    var t=JSON.parse(totRaw);
+    document.getElementById('liabTotal').value=t.liab||'';
+    document.getElementById('assTotal').value=t.ass||'';
+  }
+  // auto-save totals on change
+  document.getElementById('liabTotal').addEventListener('input', saveTable);
+  document.getElementById('assTotal').addEventListener('input', saveTable);
   setupDropZones();
   setupResize();
   resizeCanvas();
 }
 
-function buildBody(){
-  var tbody = document.getElementById("tableBody");
-  tbody.innerHTML = "";
-  for(var r = 0; r < ROWS; r++) addBodyRow(tbody);
-}
-
+/* ── MAKE CELL ── */
 function makeCell(isMid){
-  var td = document.createElement("td");
-  td.className = "drop-cell";
-  if(isMid) td.classList.add("mid-divider");
-  td.innerHTML = "<textarea rows='1'></textarea><div class='resize-row-handle'></div>";
+  var td=document.createElement('td');
+  td.className='drop-cell';
+  if(isMid) td.classList.add('mid-divider');
+  td.innerHTML="<textarea rows='1'></textarea><div class='resize-row-handle'></div>";
   return td;
 }
 
-function addBodyRow(tbody){
-  var tr = document.createElement("tr");
+/* ── ADD BODY ROW ── */
+function addBodyRow(tbody, data){
+  var tr=document.createElement('tr');
   tr.appendChild(makeCell(false));
   tr.appendChild(makeCell(true));
   tr.appendChild(makeCell(false));
   tr.appendChild(makeCell(false));
   tbody.appendChild(tr);
+
+  if(data){
+    var tas=tr.querySelectorAll('textarea');
+    data.cells.forEach(function(v,i){ if(tas[i]) tas[i].value=v; });
+    var tds=tr.querySelectorAll('td');
+    data.heights.forEach(function(h,i){ if(tds[i]&&h) tds[i].style.height=h; });
+  }
+
+  tr.querySelectorAll('textarea').forEach(function(ta){
+    ta.addEventListener('input', saveTable);
+  });
 }
 
+/* ── ADD ROW BUTTON ── */
 function addRow(){
-  addBodyRow(document.getElementById("tableBody"));
+  addBodyRow(document.getElementById('tableBody'), null);
   setupDropZones();
   setupResize();
   resizeCanvas();
+  saveTable();
 }
 
+/* ── CLEAR TABLE ONLY ── */
+function confirmClearTable(){
+  if(!confirm('Clear the table? Cards will NOT be deleted.')) return;
+  document.querySelectorAll('.cap-table textarea').forEach(function(t){ t.value=''; });
+  var tbody=document.getElementById('tableBody');
+  while(tbody.rows.length>5) tbody.deleteRow(tbody.rows.length-1);
+  saveTable();
+  showToast('Table cleared!');
+}
+
+/* ── DROP ZONES ── */
 function setupDropZones(){
-  document.querySelectorAll(".drop-cell").forEach(function(cell){
-    cell.addEventListener("dragover", function(e){ e.preventDefault(); });
-    cell.addEventListener("drop", function(e){
+  document.querySelectorAll('.drop-cell').forEach(function(cell){
+    if(cell._dropSetup) return;
+    cell._dropSetup=true;
+    cell.addEventListener('dragover',function(e){ e.preventDefault(); });
+    cell.addEventListener('drop',function(e){
       e.preventDefault();
-      var card = document.getElementById(e.dataTransfer.getData("text/plain"));
+      var card=document.getElementById(e.dataTransfer.getData('text/plain'));
       if(!card) return;
-      var ta = cell.querySelector("textarea");
+      var ta=cell.querySelector('textarea');
       if(!ta) return;
-      var allCells = Array.from(cell.parentElement.querySelectorAll("td"));
-      var idx = allCells.indexOf(cell);
-      if(idx === 0 || idx === 2){
-        ta.value = card.dataset.particulars;
-        var amtCell = allCells[idx + 1];
-        if(amtCell) amtCell.querySelector("textarea").value = card.dataset.amount;
+      var allCells=Array.from(cell.parentElement.querySelectorAll('td'));
+      var idx=allCells.indexOf(cell);
+      if(idx===0||idx===2){
+        ta.value=card.dataset.particulars;
+        var amtCell=allCells[idx+1];
+        if(amtCell){ var ata=amtCell.querySelector('textarea'); if(ata) ata.value=card.dataset.amount; }
       } else {
-        ta.value = card.dataset.amount;
+        ta.value=card.dataset.amount;
       }
       card.remove();
+      saveTable();
     });
   });
 }
 
+/* ── RESIZE ── */
 function setupResize(){
-  document.querySelectorAll(".resize-handle").forEach(function(handle){
-    handle.onmousedown = function(e){
+  document.querySelectorAll('.resize-handle').forEach(function(handle){
+    if(handle._rSetup) return; handle._rSetup=true;
+    handle.onmousedown=function(e){
       e.preventDefault(); e.stopPropagation();
-      var th = handle.parentElement;
-      var startX = e.pageX, startW = th.offsetWidth;
-      function onMove(e){ var w = Math.max(60, startW + (e.pageX - startX)); th.style.width = w+"px"; th.style.minWidth = w+"px"; resizeCanvas(); }
-      function onUp(){ document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); }
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
+      var th=handle.parentElement, startX=e.pageX, startW=th.offsetWidth;
+      function onMove(e){ var w=Math.max(60,startW+(e.pageX-startX)); th.style.width=w+'px'; th.style.minWidth=w+'px'; resizeCanvas(); }
+      function onUp(){ document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); saveTable(); }
+      document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
     };
   });
-  document.querySelectorAll(".resize-row-handle").forEach(function(handle){
-    handle.onmousedown = function(e){
+  document.querySelectorAll('.resize-row-handle').forEach(function(handle){
+    if(handle._rrSetup) return; handle._rrSetup=true;
+    handle.onmousedown=function(e){
       e.preventDefault(); e.stopPropagation();
-      var tr = handle.parentElement.parentElement;
-      var tds = tr.querySelectorAll("td");
-      var startY = e.pageY, startH = tr.getBoundingClientRect().height;
-      function onMove(e){ var h = Math.max(36, startH + (e.pageY - startY)); tds.forEach(function(td){ td.style.height = h+"px"; }); }
-      function onUp(){ document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); resizeCanvas(); }
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp);
+      var tr=handle.parentElement.parentElement, tds=tr.querySelectorAll('td'), startY=e.pageY, startH=tr.getBoundingClientRect().height;
+      function onMove(e){ var h=Math.max(36,startH+(e.pageY-startY)); tds.forEach(function(td){ td.style.height=h+'px'; }); }
+      function onUp(){ document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); resizeCanvas(); saveTable(); }
+      document.addEventListener('mousemove',onMove); document.addEventListener('mouseup',onUp);
     };
   });
 }
 
 /* ── CANVAS ── */
-var canvas = document.getElementById("drawLayer");
-var wrapper = document.getElementById("tableWrapper");
-var ctx = canvas.getContext("2d");
-
+var canvas=document.getElementById('drawLayer');
+var wrapper=document.getElementById('tableWrapper');
+var ctx=canvas.getContext('2d');
 function resizeCanvas(){
-  var imgData = null;
-  if(canvas.width > 0 && canvas.height > 0){ try{ imgData = ctx.getImageData(0,0,canvas.width,canvas.height); }catch(e){} }
-  canvas.width = wrapper.scrollWidth;
-  canvas.height = wrapper.scrollHeight;
+  var imgData=null;
+  if(canvas.width>0&&canvas.height>0){ try{ imgData=ctx.getImageData(0,0,canvas.width,canvas.height); }catch(e){} }
+  canvas.width=wrapper.scrollWidth; canvas.height=wrapper.scrollHeight;
   if(imgData) try{ ctx.putImageData(imgData,0,0); }catch(e){}
 }
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener('resize',resizeCanvas);
 
-var drawing = false;
-var tool = "typing";
-
+var drawing=false, tool='typing';
 function setTool(t){
-  tool = t;
-  ["typingBtn","pencilBtn","eraserBtn"].forEach(function(id){ document.getElementById(id).classList.remove("tool-active"); });
-  if(t === "typing"){
-    canvas.style.pointerEvents = "none"; canvas.style.zIndex = "0";
-    document.getElementById("typingBtn").classList.add("tool-active");
-  } else if(t === "pencil"){
-    canvas.style.pointerEvents = "auto"; canvas.style.zIndex = "99"; canvas.style.cursor = "crosshair";
-    document.getElementById("pencilBtn").classList.add("tool-active");
-  } else {
-    canvas.style.pointerEvents = "auto"; canvas.style.zIndex = "99"; canvas.style.cursor = "cell";
-    document.getElementById("eraserBtn").classList.add("tool-active");
-  }
+  tool=t;
+  ['typingBtn','pencilBtn','eraserBtn'].forEach(function(id){ document.getElementById(id).classList.remove('tool-active'); });
+  if(t==='typing'){ canvas.style.pointerEvents='none'; canvas.style.zIndex='0'; document.getElementById('typingBtn').classList.add('tool-active'); }
+  else if(t==='pencil'){ canvas.style.pointerEvents='auto'; canvas.style.zIndex='99'; canvas.style.cursor='crosshair'; document.getElementById('pencilBtn').classList.add('tool-active'); }
+  else { canvas.style.pointerEvents='auto'; canvas.style.zIndex='99'; canvas.style.cursor='cell'; document.getElementById('eraserBtn').classList.add('tool-active'); }
 }
-setTool("typing");
+setTool('typing');
 
-function getBelow(e){ canvas.style.pointerEvents="none"; var el=document.elementFromPoint(e.clientX,e.clientY); canvas.style.pointerEvents=tool==="typing"?"none":"auto"; return el; }
-canvas.addEventListener("dragover",function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent("dragover",{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
-canvas.addEventListener("drop",function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent("drop",{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
-
-canvas.addEventListener("mousedown",function(e){ if(tool==="typing") return; drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY); });
-window.addEventListener("mousemove",function(e){
+function getBelow(e){ canvas.style.pointerEvents='none'; var el=document.elementFromPoint(e.clientX,e.clientY); canvas.style.pointerEvents=tool==='typing'?'none':'auto'; return el; }
+canvas.addEventListener('dragover',function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent('dragover',{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
+canvas.addEventListener('drop',function(e){ e.preventDefault(); var el=getBelow(e); if(el) el.dispatchEvent(new DragEvent('drop',{bubbles:true,cancelable:true,dataTransfer:e.dataTransfer})); });
+canvas.addEventListener('mousedown',function(e){ if(tool==='typing') return; drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX,e.offsetY); });
+window.addEventListener('mousemove',function(e){
   if(!drawing) return;
-  var r = canvas.getBoundingClientRect();
-  ctx.lineCap="round"; ctx.lineJoin="round";
-  if(tool==="eraser"){ ctx.globalCompositeOperation="destination-out"; ctx.lineWidth=30; }
-  else { ctx.globalCompositeOperation="source-over"; ctx.strokeStyle="#111"; ctx.lineWidth=2.5; }
-  ctx.lineTo(e.clientX-r.left, e.clientY-r.top); ctx.stroke();
+  var r=canvas.getBoundingClientRect();
+  ctx.lineCap='round'; ctx.lineJoin='round';
+  if(tool==='eraser'){ ctx.globalCompositeOperation='destination-out'; ctx.lineWidth=30; }
+  else { ctx.globalCompositeOperation='source-over'; ctx.strokeStyle='#111'; ctx.lineWidth=2.5; }
+  ctx.lineTo(e.clientX-r.left,e.clientY-r.top); ctx.stroke();
 });
-window.addEventListener("mouseup",function(){ if(!drawing) return; drawing=false; ctx.beginPath(); });
+window.addEventListener('mouseup',function(){ if(!drawing) return; drawing=false; ctx.beginPath(); });
 
-/* ── GENERATE CARD ── */
+/* ── CARDS ── */
+function saveCards(){
+  var cards=[];
+  document.querySelectorAll('#cardsContainer .card').forEach(function(card){
+    cards.push({ particulars:card.dataset.particulars, amount:card.dataset.amount });
+  });
+  localStorage.setItem(SK_CARDS, JSON.stringify(cards));
+  var now=new Date();
+  document.getElementById('saveStatus').textContent='Saved at '+now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  showToast('Cards saved! ✅');
+}
+
+function loadCards(){
+  var raw=localStorage.getItem(SK_CARDS);
+  if(!raw) return;
+  JSON.parse(raw).forEach(function(c){ createCard(c.particulars,c.amount); });
+}
+
+function confirmDeleteAllCards(){
+  if(!confirm('Delete ALL saved cards? This cannot be undone.')) return;
+  document.getElementById('cardsContainer').innerHTML='';
+  localStorage.removeItem(SK_CARDS);
+  document.getElementById('saveStatus').textContent='';
+  showToast('All cards deleted!');
+}
+
 function generateCard(){
-  var input = document.getElementById("entryInput");
+  var input=document.getElementById('entryInput');
   if(!input.value.trim()) return;
-  var text = input.value.trim();
-  var amountMatch = text.match(/\d+/g);
-  var amount = amountMatch ? amountMatch.join("") : "";
-  var particulars = text.replace(/[0-9\u20B9,]/g,"").trim();
+  var text=input.value.trim();
+  var amountMatch=text.match(/\d+/g);
+  var amount=amountMatch?amountMatch.join(''):'';
+  var particulars=text.replace(/[0-9₹,]/g,'').trim();
+  createCard(particulars,amount);
+  input.value='';
+}
 
-  var card = document.createElement("div");
+function createCard(particulars,amount){
+  var card=document.createElement('div');
   cardCount++;
-  card.id = "card" + cardCount;
-  card.draggable = true;
-  card.dataset.particulars = particulars;
-  card.dataset.amount = amount;
-  card.className = "card";
-  card.innerHTML = '<div class="particular">' + particulars + '</div><div class="amount">&#8377;' + amount + '</div><small>Drag Me</small>';
-  card.addEventListener("dragstart", function(e){ e.dataTransfer.setData("text/plain", card.id); });
-  document.getElementById("cardsContainer").appendChild(card);
-  input.value = "";
-}
-document.getElementById("entryInput").addEventListener("keypress", function(e){ if(e.key==="Enter") generateCard(); });
-
-/* ── CLEAR ── */
-function clearAll(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  document.querySelectorAll(".cap-table textarea").forEach(function(t){ t.value=""; });
-  document.getElementById("cardsContainer").innerHTML="";
+  card.id='card'+cardCount;
+  card.draggable=true;
+  card.dataset.particulars=particulars;
+  card.dataset.amount=amount;
+  card.className='card';
+  card.innerHTML='<button class="card-del-btn" title="Delete card">✕</button><div class="particular">'+particulars+'</div><div class="amount">₹'+amount+'</div><small>Drag Me</small>';
+  card.addEventListener('dragstart',function(e){ e.dataTransfer.setData('text/plain',card.id); });
+  card.querySelector('.card-del-btn').addEventListener('click',function(e){
+    e.stopPropagation();
+    if(confirm('Delete this card?')){ card.remove(); }
+  });
+  document.getElementById('cardsContainer').appendChild(card);
 }
 
-buildTable();
+document.getElementById('entryInput').addEventListener('keypress',function(e){ if(e.key==='Enter') generateCard(); });
+
+/* ── INIT ── */
+loadTable();
+loadCards();
 </script>
 </body>
 </html>
