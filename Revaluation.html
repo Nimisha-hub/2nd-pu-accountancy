@@ -9,7 +9,7 @@
 body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .top-nav{ display:flex; gap:14px; margin-bottom:18px; }
 .page-btn{ padding:14px 24px; border:none; border-radius:16px; background:#111; color:white; font-size:16px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-.main-layout{ display:grid; grid-template-columns:58% 42%; gap:20px; }
+.main-layout{ display:grid; grid-template-columns:58% 42%; gap:20px; min-width:700px; }
 .left-panel{ background:white; padding:24px; border-radius:28px; box-shadow:0 6px 20px rgba(0,0,0,0.08); position:relative; }
 .top-buttons{ display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
 .top-buttons button{ background:#111; color:white; border:none; padding:14px 20px; border-radius:16px; font-size:15px; cursor:pointer; transition:0.25s; font-weight:600; }
@@ -54,13 +54,20 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .card-input-area button:hover{ background:#333; transform:translateY(-2px); }
 .cards-scroll{ flex:1; overflow-y:auto; padding-right:5px; }
 .cards-container{ display:flex; flex-wrap:wrap; gap:14px; align-content:flex-start; }
-.card{ width:160px; min-height:90px; background:white; border-radius:18px; padding:12px; box-shadow:0 4px 14px rgba(0,0,0,0.08); border-left:6px solid #4d6fff; position:relative; transition:0.25s; cursor:grab; user-select:none; }
+
+/* CARD STYLES */
+.card{ width:175px; min-height:90px; background:white; border-radius:18px; padding:12px; box-shadow:0 4px 14px rgba(0,0,0,0.08); border-left:6px solid #4d6fff; position:relative; transition:0.25s; cursor:grab; user-select:none; }
 .card.cr{ border-left:6px solid #1db56c; }
 .card:hover{ transform:translateY(-5px) scale(1.03); box-shadow:0 10px 20px rgba(0,0,0,0.12); }
 .tag{ display:inline-block; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold; margin-bottom:8px; background:#e7edff; color:#4d6fff; }
 .card.cr .tag{ background:#dff7ea; color:#1db56c; }
-.particular{ font-size:14px; font-weight:600; line-height:1.3; margin-bottom:6px; word-break:break-word; }
-.amount{ font-size:14px; font-weight:bold; }
+
+/* Particulars: main line normal, sub-lines (brackets/partners) smaller */
+.particular{ font-size:14px; font-weight:600; line-height:1.4; margin-bottom:6px; word-break:break-word; }
+.particular .sub-line{ display:block; font-size:12px; font-weight:500; color:#555; margin-top:2px; }
+.particular .partner-line{ display:block; font-size:12px; font-weight:500; color:#333; margin-top:3px; background:#f5f5f5; border-radius:6px; padding:2px 6px; }
+
+.amount{ font-size:14px; font-weight:bold; margin-bottom:16px; }
 .card-del-btn{ position:absolute; right:8px; top:8px; background:#ffe5e5; border:none; border-radius:50%; width:22px; height:22px; font-size:13px; cursor:pointer; color:#cc0000; display:flex; align-items:center; justify-content:center; opacity:0; transition:0.2s; }
 .card:hover .card-del-btn{ opacity:1; }
 .card small{ position:absolute; right:10px; bottom:8px; color:#aaa; font-size:11px; }
@@ -69,7 +76,7 @@ body{ background:#f4f6fb; padding:18px; min-height:100vh; overflow-x:hidden; }
 .toast{ position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:#111; color:#fff; padding:12px 28px; border-radius:16px; font-size:14px; font-weight:600; opacity:0; transition:all 0.3s; pointer-events:none; z-index:9999; }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
-@media(max-width:1000px){ .main-layout{ grid-template-columns:1fr; } .right-panel{ height:auto; } .title{ font-size:30px; } }
+@media(max-width:600px){ .main-layout{ grid-template-columns:1fr; } .right-panel{ height:auto; } .title{ font-size:30px; } }
 </style>
 </head>
 <body>
@@ -169,12 +176,9 @@ function loadTable(){
   var totRaw=localStorage.getItem(STORAGE_TOTALS);
   var rows=raw?JSON.parse(raw):null;
   if(!rows||rows.length===0){
-    // Default 5 empty rows
     for(var i=0;i<5;i++) addRow(true);
   } else {
-    rows.forEach(function(rowData){
-      addRow(true, rowData);
-    });
+    rows.forEach(function(rowData){ addRow(true, rowData); });
   }
   if(totRaw){
     var t=JSON.parse(totRaw);
@@ -202,7 +206,6 @@ function addRow(silent, data){
   if(!silent) saveTable();
 }
 
-/* Auto-save on any textarea change */
 function setupAutoSave(row){
   row.querySelectorAll('textarea').forEach(function(ta){
     ta.addEventListener('input', function(){ saveTable(); });
@@ -222,13 +225,12 @@ function calculateTotals(){
   saveTable();
 }
 
-/* ── CLEAR TABLE ONLY ── */
+/* ── CLEAR TABLE ── */
 function confirmClearAll(){
   if(!confirm('Clear the table? Cards will NOT be deleted.')) return;
   document.querySelectorAll('.reval-table textarea').forEach(function(i){ i.value=''; });
   document.getElementById('drTotal').value='';
   document.getElementById('crTotal').value='';
-  // Remove extra rows, keep 5
   var tbody=document.getElementById('tableBody');
   while(tbody.rows.length>5) tbody.deleteRow(tbody.rows.length-1);
   saveTable();
@@ -241,7 +243,9 @@ function saveCards(){
   document.querySelectorAll('#cardsContainer .card').forEach(function(card){
     cards.push({
       type: card.dataset.type,
-      particulars: card.dataset.particulars,
+      mainParticular: card.dataset.mainparticular,
+      subLine: card.dataset.subline || '',
+      partners: card.dataset.partners || '',
       amount: card.dataset.amount
     });
   });
@@ -256,7 +260,7 @@ function loadCards(){
   if(!raw) return;
   var cards=JSON.parse(raw);
   cards.forEach(function(c){
-    createCard(c.type, c.particulars, c.amount);
+    createCard(c.type, c.mainParticular, c.amount, c.subLine||'', c.partners||'');
   });
 }
 
@@ -268,38 +272,154 @@ function confirmDeleteAllCards(){
   showToast('All cards deleted!');
 }
 
-/* ── GENERATE CARD ── */
-function generateCard(){
-  var input=document.getElementById('entryInput');
-  if(!input.value.trim()) return;
-  var text=input.value.trim();
-  var amountMatch=text.match(/\d+/g);
-  var amount=amountMatch?amountMatch.join(''):'';
-  var type=text.toLowerCase().startsWith('by ')?'CR':'DR';
-  var particulars=text.replace(/^to\s+/i,'').replace(/^by\s+/i,'').replace(/[0-9₹,]/g,'').trim();
-  createCard(type, particulars, amount);
-  input.value='';
+/* ════════════════════════════════════════════
+   SMART GENERATE CARD
+   Handles:
+   1. Normal:   To Stock 12000
+   2. Bracket:  To Reserve on debtors (22000*6/100) 1320
+   3. Partner split: To profit transferred to partners capital a/c
+                     ragga - 12780*2/3 taala - 12780*1/3=4260
+════════════════════════════════════════════ */
+function parseAndEval(expr){
+  // Evaluates expressions like 22000*6/100 or 12780*2/3
+  try {
+    // Only allow digits, operators, spaces, dots, slashes
+    var safe = expr.replace(/[^0-9+\-*\/\.\s]/g,'').trim();
+    if(!safe) return null;
+    var result = Function('"use strict"; return (' + safe + ')')();
+    return Math.round(result * 100) / 100; // round to 2 decimal places
+  } catch(e){ return null; }
 }
 
-function createCard(type, particulars, amount){
-  var card=document.createElement('div');
+function generateCard(){
+  var input = document.getElementById('entryInput');
+  var text = input.value.trim();
+  if(!text) return;
+
+  /* ── Detect partner split pattern ──
+     Pattern: "To/By <description> <name1> - <expr1> <name2> - <expr2> ..."
+     Example: To profit transferred to partners capital a/c ragga - 12780*2/3 taala - 12780*1/3
+  */
+  var partnerPattern = /^(to|by)\s+(.+?)\s+((?:[a-zA-Z][a-zA-Z\s]*-\s*[\d\/*+\-\.]+(?:=[\d\.]+)?\s*)+)$/i;
+  var partnerMatch = text.match(partnerPattern);
+
+  if(partnerMatch){
+    var prefix = partnerMatch[1];           // "To" or "By"
+    var description = partnerMatch[2].trim(); // "profit transferred to partners capital a/c"
+    var partnerStr = partnerMatch[3].trim();  // "ragga - 12780*2/3 taala - 12780*1/3=4260"
+
+    // Parse individual partners: split on word boundary before each name-amount pair
+    // Match pattern: name - expression (optionally =result)
+    var partnerEntries = [];
+    var re = /([a-zA-Z][a-zA-Z\s]*?)\s*-\s*([\d\/*+\-\.]+)(?:=[\d\.]+)?/g;
+    var m;
+    var totalAmount = 0;
+    while((m = re.exec(partnerStr)) !== null){
+      var pName = m[1].trim();
+      var pExpr = m[2].trim();
+      var pAmt = parseAndEval(pExpr);
+      if(pAmt === null) pAmt = 0;
+      totalAmount += pAmt;
+      partnerEntries.push({ name: pName, expr: pExpr, amount: pAmt });
+    }
+
+    // Build partners display string (stored in dataset)
+    var partnersDisplay = partnerEntries.map(function(p){
+      return p.name + ' - ₹' + p.amount;
+    }).join('|');
+
+    var type = prefix.toLowerCase() === 'by' ? 'CR' : 'DR';
+    var mainParticular = prefix + ' ' + description;
+    createCard(type, mainParticular, totalAmount, '', partnersDisplay);
+    input.value = '';
+    return;
+  }
+
+  /* ── Detect bracket+amount pattern ──
+     Pattern: To/By <particular> (<expression>) <amount>
+     OR:      To/By <particular> (<expression>)   ← amount auto-calculated
+     Example: To Reserve on debtors (22000*6/100) 1320
+  */
+  var bracketPattern = /^(to|by)\s+(.+?)\s*\(([^)]+)\)\s*(\d+)?$/i;
+  var bracketMatch = text.match(bracketPattern);
+
+  if(bracketMatch){
+    var prefix = bracketMatch[1];
+    var mainPart = prefix + ' ' + bracketMatch[2].trim();
+    var bracketExpr = bracketMatch[3].trim();
+    var explicitAmount = bracketMatch[4] ? parseInt(bracketMatch[4]) : null;
+
+    // Try to evaluate the bracket expression
+    var calcAmount = parseAndEval(bracketExpr);
+    var finalAmount = explicitAmount !== null ? explicitAmount : (calcAmount !== null ? calcAmount : '');
+
+    var type = prefix.toLowerCase() === 'by' ? 'CR' : 'DR';
+    var subLine = '(' + bracketExpr + ')';
+    createCard(type, mainPart, finalAmount, subLine, '');
+    input.value = '';
+    return;
+  }
+
+  /* ── Normal pattern ──
+     To/By <particular> <amount>
+  */
+  var type = text.toLowerCase().startsWith('by ') ? 'CR' : 'DR';
+  var amountMatch = text.match(/\d+/g);
+  var amount = amountMatch ? amountMatch[amountMatch.length - 1] : '';
+  var particulars = text.replace(/^to\s+/i,'').replace(/^by\s+/i,'').replace(/[0-9₹,]/g,'').trim();
+  createCard(type, particulars, amount, '', '');
+  input.value = '';
+}
+
+/* ── CREATE CARD ── */
+function createCard(type, mainParticular, amount, subLine, partners){
+  var card = document.createElement('div');
   cardCount++;
-  card.id='card'+cardCount;
-  card.draggable=true;
-  card.dataset.type=type;
-  card.dataset.particulars=particulars;
-  card.dataset.amount=amount;
-  card.className=type==='DR'?'card':'card cr';
-  card.innerHTML='<button class="card-del-btn" title="Delete card">✕</button><div class="tag">'+type+'</div><div class="particular">'+particulars+'</div><div class="amount">₹'+amount+'</div><small>Drag Me</small>';
-  card.addEventListener('dragstart',function(e){ e.dataTransfer.setData('text/plain',card.id); });
-  card.querySelector('.card-del-btn').addEventListener('click',function(e){
+  card.id = 'card' + cardCount;
+  card.draggable = true;
+  card.dataset.type = type;
+  card.dataset.mainparticular = mainParticular;
+  card.dataset.subline = subLine || '';
+  card.dataset.partners = partners || '';
+  card.dataset.amount = amount;
+  card.className = type === 'DR' ? 'card' : 'card cr';
+
+  // Build particulars HTML
+  var particularHTML = '<div class="particular">' + escHtml(mainParticular);
+  if(subLine){
+    particularHTML += '<span class="sub-line">' + escHtml(subLine) + '</span>';
+  }
+  if(partners){
+    partners.split('|').forEach(function(p){
+      if(p.trim()) particularHTML += '<span class="partner-line">' + escHtml(p.trim()) + '</span>';
+    });
+  }
+  particularHTML += '</div>';
+
+  card.innerHTML =
+    '<button class="card-del-btn" title="Delete card">✕</button>' +
+    '<div class="tag">' + type + '</div>' +
+    particularHTML +
+    '<div class="amount">₹' + amount + '</div>' +
+    '<small>Drag Me</small>';
+
+  card.addEventListener('dragstart', function(e){ e.dataTransfer.setData('text/plain', card.id); });
+  card.querySelector('.card-del-btn').addEventListener('click', function(e){
     e.stopPropagation();
     if(confirm('Delete this card?')){ card.remove(); }
   });
   document.getElementById('cardsContainer').appendChild(card);
 }
 
-document.getElementById('entryInput').addEventListener('keypress',function(e){ if(e.key==='Enter') generateCard(); });
+function escHtml(str){
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+document.getElementById('entryInput').addEventListener('keypress', function(e){ if(e.key==='Enter') generateCard(); });
 
 /* ── DROP ZONES ── */
 function setupDropZones(){
@@ -314,12 +434,23 @@ function setupDropZones(){
       var card=document.getElementById(e.dataTransfer.getData('text/plain'));
       if(!card) return;
       var inputs=cell.parentElement.querySelectorAll('textarea');
+      var mainP = card.dataset.mainparticular || card.dataset.particulars || '';
+      var subL = card.dataset.subline || '';
+      var partners = card.dataset.partners || '';
+
+      // Build full particular text for table cell
+      var fullParticular = mainP;
+      if(subL) fullParticular += '\n' + subL;
+      if(partners){
+        partners.split('|').forEach(function(p){ if(p.trim()) fullParticular += '\n' + p.trim(); });
+      }
+
       if(card.dataset.type==='DR'){
-        inputs[0].value='To '+card.dataset.particulars;
-        inputs[1].value=card.dataset.amount;
+        inputs[0].value = fullParticular;
+        inputs[1].value = card.dataset.amount;
       } else {
-        inputs[2].value='By '+card.dataset.particulars;
-        inputs[3].value=card.dataset.amount;
+        inputs[2].value = fullParticular;
+        inputs[3].value = card.dataset.amount;
       }
       card.remove();
       calculateTotals();
